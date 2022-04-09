@@ -1,0 +1,6 @@
+C:\InspecaoSonar\Dev\GIT\RICARDO-PUIG\PAY\java-paysrv\pay-services\src\main\java\br\com\santander\pay\Application.java@@@
+C:\InspecaoSonar\Dev\GIT\RICARDO-PUIG\PAY\java-payappand\app\src\main\java\br\com\santander\ewallet\service\AppController.java@@@
+C:\InspecaoSonar\Dev\RTC\KPV\ORA-KPVCLIORAC-SRC###
+C:\InspecaoSonar\Dev\RTC\KPV\ORA-KPVCLITOOL-SRC###
+C:\InspecaoSonar\Dev\RTC\KPV\VB6-KPVCLIKFIP-SRC###
+C:\InspecaoSonar\Dev\RTC\KPV\VB6-KPVCLISYSE-SRC###

@@ -1,0 +1,2 @@
+Test;Tests;Teste;Testes;lib;src-testes;enum;enums;enumeration;ios;build;.scannerwork;.sonar;.vscode;hooks;logs;merges;
+node_modules;platforms;plugins;res;resources;sign-ios;tests;typings;ul_web_hooks;wordpress

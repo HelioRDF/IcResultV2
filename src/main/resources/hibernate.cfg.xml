@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC  "-//Hibernate/Hibernate Configuration DTD 3.0//EN"  
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd" >
+<hibernate-configuration>
+	<session-factory>
+
+		<!-- Configurações de Conexão com o Banco de Dados MySqQL -->
+		<property name="connection.driver_class">com.mysql.jdbc.Driver </property>
+		<property name="connection.url">jdbc:mysql://127.0.0.1:3306/db_inspecao</property>
+		<property name="connection.username">root</property>
+		<property name="connection.password">root</property>
+		<property name="dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
+
+		<!-- Configurações de Conexão com o banco de dados SQL Server -->
+		<!-- <property name="connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property> -->
+		<!-- <property name="connection.url">jdbc:sqlserver://10.1.10.6:1433;databaseName=DB_INSPECAO</property> -->
+		<!-- <property name="connection.url">jdbc:sqlserver://180.128.233.218:1433;databaseName=DB_INSPECAO</property> -->
+		<!-- <property name="connection.username">appinspecao</property> -->
+		<!-- <property name="connection.password">Rsi#2019!!!!!</property> -->
+		<!-- <property name="connection.username">sa</property> <property name="connection.password">rsi#123</property> -->
+
+		<!-- <property name="connection.url">jdbc:sqlserver://127.0.0.1:1433;databaseName=DB_INSPECAO</property> -->
+		<!-- <property name="connection.username">appinspecao</property> -->
+		<!-- <property name="connection.password">Rsi#2021!!</property> -->
+
+		<!--<property name="connection.url">jdbc:sqlserver://10.1.10.6:1433;databaseName=DB_INSPECAO</property> -->
+		<!--<property name="connection.username">sa</property> -->
+		<!--<property name="connection.password">rsi#123</property> -->
+
+		<!-- <property name="dialect">org.hibernate.dialect.SQLServerDialect</property> -->
+
+
+		<!-- Pool de Conexões. -->
+		<!-- necessário trocar o Pool xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx -->
+		<property name="connection.pool_size">100</property>
+
+		<!-- Gerenciamento do Contexto das Sessões -->
+		<property name="current_session_context_class">thread</property>
+		<!-- Cache de Segundo Nível -->
+		<property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>
+		<!-- Mostra as SQLs Geradas -->
+		<property name="show_sql">true</property>
+		<!-- Cria as tabelas do banco de dados "Create|Update|Validade" -->
+		<property name="hbm2ddl.auto">update</property>
+
+		<!-- Mapeamento das entidades -->
+
+		<!-- <mapping -->
+		<!-- class="br.com.icresult.domain.complementos.Analise_Dev_Diario" /> -->
+		<mapping
+			class="br.com.icresult.domain.complementos.Analise_Dev_Jenkins" />
+		<mapping
+			class="br.com.icresult.domain.complementos.Analise_Dev_Mensal" />
+
+		<mapping
+			class="br.com.icresult.domain.complementos.Analise_Homologacao" />
+
+		<mapping
+			class="br.com.icresult.domain.complementos.Analise_Sonar" />
+		<mapping
+			class="br.com.icresult.domain.complementos.Analise_HK" />
+		<mapping class="br.com.icresult.domain.complementos.Anotacoes" />
+
+		<mapping
+			class="br.com.icresult.domain.complementos.SonarPainel" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ControleGitDev" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ControleGitDevMensal" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ControleGitHK" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ControleRtcDev" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ControleRtcHK" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ControleSiglas" />
+		<mapping
+			class="br.com.icresult.domain.complementos.DevOpsGenerico" />
+		<mapping
+			class="br.com.icresult.domain.complementos.DevOpsJenkins" />
+		<mapping class="br.com.icresult.domain.complementos.Liferay" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ListaCloudBees" />
+		<mapping
+			class="br.com.icresult.domain.complementos.Modulos_Espanha" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ModulosRTCDEV" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ModulosRTCHK" />
+		<mapping class="br.com.icresult.domain.complementos.RFC" />
+		<mapping
+			class="br.com.icresult.domain.complementos.RelacaoProjetoSiglaGestor" />
+		<mapping class="br.com.icresult.domain.complementos.SiglasGit" />
+		<mapping class="br.com.icresult.domain.usuarios.Usuario" />
+		<mapping class="br.com.icresult.domain.complementos.Config" />
+		<mapping class="br.com.icresult.domain.complementos.Entrega" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ControleGitSonar" />
+		<mapping class="br.com.icresult.domain.complementos.ConfigGit" />
+		<mapping
+			class="br.com.icresult.domain.complementos.ControleRtcSonar" />
+
+		<mapping
+			class="br.com.icresult.domain.complementos.PaineisDentroSonar" />
+		<mapping
+			class="br.com.icresult.domain.complementos.PainelDoSonarListaGeral" />
+		<mapping
+			class="br.com.icresult.domain.complementos.NaoInspecionadas" />
+	</session-factory>
+</hibernate-configuration>

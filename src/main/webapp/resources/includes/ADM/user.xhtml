@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+	<h:form id="formTb">
+
+		<!-- Dialogo de confirmacao de exclusao de um usuário -->
+		<p:dialog widgetVar="dlgDeletaUsuario"
+			header="Deseja excluir o usuario : #{usuarioBean.usuarioEdicao.email}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('dlgDeletaUsuario').hide();"
+					update=":formTb:fr:dataTableControle"
+					style="color:#8c1515; font-size:15px;" icon="ui-icon-refresh"
+					action="#{usuarioBean.excluirUsuario}">
+				</p:commandButton>
+
+				<p:commandButton value="NÃO" style="color:blue;font-size:15px;"
+					oncomplete="PF('dlgDeletaUsuario').hide();" icon="ui-icon-check" />
+
+			</h:panelGrid>
+		</p:dialog>
+
+		<!-- Tela de Cadastro de Usuários -->
+		<p:dialog header="Cadastro de Usuários" widgetVar="dlgCadastroUsuario"
+			showEffect="explode" hideEffect="explode" height="400px"
+			responsive="true" resizable="false">
+			<h:panelGrid columns="1">
+
+				<p:outputLabel style="font-size:12px" value="E-mail"
+					for="emailCadastro" />
+				<p:inputText id="emailCadastro" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.emailCadastro}" />
+
+				<p:outputLabel style="font-size:12px" value="Nome"
+					for="nomeCadastro" />
+				<p:inputText id="nomeCadastro" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.nomeCadastro}" />
+
+				<p:outputLabel style="font-size:12px" value="Descrição"
+					for="descricao" />
+				<p:inputTextarea id="descricao" autoResize="true" maxlength="250"
+					size="23" style="font-size:14px; width:200px;"
+					value="#{usuarioBean.descricao}" />
+
+				<p:outputLabel style="font-size:12px" value="Senha"
+					for="senhaCadastro" />
+				<p:password id="senhaCadastro" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.senhaSemCriptografia}" />
+
+				<p:outputLabel style="font-size:12px" value="Confirmar Senha"
+					for="confirmacaoSenhaCadastro" />
+				<p:password id="confirmacaoSenhaCadastro" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.confirmacaoSenhaCadastro}" />
+
+				<p:outputLabel style="font-size:12px" value="ADM:" for="adm" />
+				<p:selectOneButton id="adm" value="#{usuarioBean.usuarioAdm}">
+					<f:selectItem itemLabel="Sim" itemValue="SIM" />
+					<f:selectItem itemLabel="Não" itemValue="NÃO" />
+				</p:selectOneButton>
+				<p:outputLabel style="font-size:12px"
+					value="Todos os campos são obrigatórios" />
+				<p:commandButton
+					style="font-size:13px; position: absolute; bottom:15px;left: 20px; "
+					value="Cadastrar"
+					actionListener="#{usuarioBean.cadastrarNovoUsuario}" update="@form"
+					icon="ui-icon-circle-check" />
+			</h:panelGrid>
+		</p:dialog>
+		<!-- Fim da Tela de Cadastro de Usuários -->
+
+		<!-- Tela de Edição de Usuários -->
+		<p:dialog header="Edição de Usuários" widgetVar="dlgEditaUsuario"
+			showEffect="explode" hideEffect="explode" height="400px"
+			responsive="true" resizable="false">
+			<h:panelGrid columns="1">
+
+				<p:outputLabel style="font-size:12px" value="E-mail"
+					for="emailEditado" />
+				<p:inputText id="emailEditado" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.usuarioEdicao.email}" />
+
+				<p:outputLabel style="font-size:12px" value="Nome" for="nomeEditado" />
+				<p:inputText id="nomeEditado" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.usuarioEdicao.nome}" />
+
+				<p:outputLabel style="font-size:12px" value="Descrição"
+					for="descricaoEditada" />
+				<p:inputTextarea id="descricaoEditada" autoResize="true" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.usuarioEdicao.descricao}" />
+
+				<p:outputLabel style="font-size:12px" value="Senha"
+					for="senhaEditada" />
+				<p:password id="senhaEditada" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.passEdicao}" />
+
+				<p:outputLabel style="font-size:12px" value="Confirmar Senha"
+					for="confirmacaoSenhaEdicao" />
+				<p:password id="confirmacaoSenhaEdicao" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{usuarioBean.confirmaPassEdicao}" />
+
+				<p:outputLabel style="font-size:12px" value="ADM:" for="admEdicao" />
+				<p:selectOneButton id="admEdicao" value="#{usuarioBean.adminString}">
+					<f:selectItem itemLabel="Sim" itemValue="SIM" />
+					<f:selectItem itemLabel="Não" itemValue="NÃO" />
+				</p:selectOneButton>
+				<p:outputLabel style="font-size:12px"
+					value="Se não alterar a senha deixe os campos de senha em branco" />
+				<p:commandButton
+					style="font-size:13px; position: absolute; bottom:15px;left: 20px; "
+					value="Editar" actionListener="#{usuarioBean.editarUsuario}"
+					update="@form" icon="ui-icon-circle-check" />
+			</h:panelGrid>
+		</p:dialog>
+
+		<p:growl id="msgGrowl" life="20000" />
+
+		<p:dialog widgetVar="statusDialog">
+			<p:graphicImage value="/images/loading6.gif" />
+		</p:dialog>
+
+		<!-- _________________________________________________________________________________________________________________________________ -->
+		<!-- Tabelas com informações Usuários  -->
+
+		<p:tabView id="fr" style="font-size:13px;">
+
+
+			<!-- Usuários _________________________________________________________________________________ -->
+			<p:tab title="Usuários" closable="true" disabled="false"
+				rendered="#{usuarioBean.usuarioLogado.admin}">
+				<p:dataTable id="dataTableControle" rendered="true"
+					rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+					emptyMessage="Nenhum Registro encontrado" rows="7" paginator="true"
+					var="dataVar" value="#{usuarioBean.listaUsuario}"
+					draggableColumns="true" style=" text-align:center;font-size: 12px;"
+					paginatorPosition="top">
+					<f:facet name="header">
+
+						<p:outputLabel value="Total: #{usuarioBean.totalUsuario}" />
+						<p:commandButton id="toggler" type="button" value="Colunas"
+							style="float:right" icon="ui-icon-calculator" />
+
+						<p:commandButton style="font-size:12px; float:right"
+							update=":formTb:fr:dataTableControle"
+							action="#{usuarioBean.listar}" title="Atualizar"
+							icon=" ui-icon-refresh" process="@this" />
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableControle"
+								fileName="Controle usuarios" />
+						</h:commandLink>
+
+						<p:commandButton style="font-size:12px; float:right"
+							id="botaoCadastrar" onclick="PF('dlgCadastroUsuario').show()"
+							title="Novo Usuário" icon=" ui-icon-plusthick" />
+
+						<p:columnToggler datasource="dataTableControle" trigger="toggler">
+						</p:columnToggler>
+
+						<!-- Animação de loading -->
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide()" />
+
+
+					</f:facet>
+					<!-- _________________________________________________________________________________________________________________________________ -->
+					<!-- Informações das Colunas -->
+					<p:column headerText="Ver" width="4%" exportable="false">
+						<!-- Expandir infos -->
+						<p:rowToggler />
+					</p:column>
+					<!-- <p:column headerText="Linhas" width="9%" sortBy="#{rowIndex}"> -->
+					<!-- #{rowIndex+1} -->
+					<!-- </p:column> -->
+					<p:column headerText="ID" width="10%" sortBy="#{dataVar.codigo}"
+						filterBy="#{dataVar.codigo}">
+						<p:outputLabel value="#{dataVar.codigo}" />
+					</p:column>
+					<p:column headerText="Nome" width="10%" sortBy="#{dataVar.nome}"
+						filterBy="#{dataVar.nome}">
+						<p:outputLabel value="#{dataVar.nome}" />
+					</p:column>
+
+					<p:column headerText="Ativado" width="10%"
+						sortBy="#{dataVar.status}" filterBy="#{dataVar.status}">
+						<p:outputLabel value="#{dataVar.status}" />
+					</p:column>
+
+					<p:column headerText="Admin" width="10%" sortBy="#{dataVar.admin}"
+						filterBy="#{dataVar.admin}">
+						<p:outputLabel value="#{dataVar.admin}" />
+					</p:column>
+
+					<p:column headerText="E-Mail" width="10%" sortBy="#{dataVar.email}"
+						filterBy="#{dataVar.email}">
+						<p:outputLabel value="#{dataVar.email}" />
+					</p:column>
+
+					<p:column headerText="Opções" width="10%">
+						<!-- Botão para edição do usuário -->
+						<p:commandButton style="margin:auto;" update="@form"
+							title="Editar Usuário"
+							actionListener="#{usuarioBean.selecionarUsuarioEdicao}"
+							icon="ui-icon-pencil" oncomplete="PF('dlgEditaUsuario').show();">
+							<f:attribute name="meuSelect" value="#{dataVar}" />
+						</p:commandButton>
+						<!-- Botão para excluir o usuário -->
+						<p:commandButton style="margin:auto;" title="Excluir Usuário"
+							actionListener="#{usuarioBean.selecionarUsuarioEdicao}"
+							icon="ui-icon-closethick"
+							oncomplete="PF('dlgDeletaUsuario').show();">
+							<f:attribute name="meuSelect" value="#{dataVar}" />
+						</p:commandButton>
+					</p:column>
+
+					<!-- _________________________________________________________________________________________________________________________________ -->
+					<!-- Informações após expandir linha -->
+					<p:rowExpansion styleClass="rowEdit">
+						<p:panelGrid columns="1" columnClasses="label,value"
+							style="text-align:left;">
+
+							<p:outputLabel value="Data de Cadastro: #{dataVar.dataCadastro}" />
+							<p:outputLabel value="Ultimo Login: #{dataVar.ultimoLogin}" />
+							<p:outputLabel value="Senha: #{dataVar.senha}" />
+							<p:outputLabel value="Perfil Dev #{dataVar.perfilDev}" />
+							<p:outputLabel value="Perfil HK #{dataVar.perfilHk}" />
+							<p:outputLabel value="Descrição: #{dataVar.descricao}" />
+
+						</p:panelGrid>
+						<!-- <p:separator style="border: 2px solid #c1c7d9; border-radius: 100px/9px; background-color:  #d4d5e6; height:8px;"> </p:separator>  -->
+						<p:separator style=" height:10px;background-color:#e6e6ff"></p:separator>
+						<br></br>
+					</p:rowExpansion>
+				</p:dataTable>
+			</p:tab>
+			<!-- FIM Controle de Siglas _________________________________________________________________________________ -->
+
+		</p:tabView>
+
+	</h:form>
+</ui:composition>

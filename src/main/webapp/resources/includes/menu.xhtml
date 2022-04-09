@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<!-- Rodapé da Página -->
+	<h:form id="menu">
+		<div class="menu">
+			<!-- Botão image Home -->
+			<h:commandLink value="ICRESULT"
+				style="float:left; height:80%;color:#a5c854;text-decoration: none;margin: 7px 15px auto 15px;font-size: 1em;"
+				action="/index.xhtml?faces-redirect=true" />
+			<p:outputLabel id="usuarioLogado" styleClass="cabecalhoInfo"
+				value="#{usuarioBean.usuarioLogado.nome} (#{usuarioBean.usuarioLogado.descricao})"
+				rendered="#{loginBean.userlogadoB}"></p:outputLabel>
+			<p:outputLabel styleClass="cabecalhoInfo" value="Visitante"
+				rendered="#{!loginBean.userlogadoB}"></p:outputLabel>
+			<p:commandButton value="Login"
+				action="/pages/publicas/login.xhtml?faces-redirect=true"
+				icon="ui-icon-person" styleClass="cabecalhoInfo"
+				style="background:#794949;" rendered="#{!loginBean.userlogadoB}" />
+
+			<p:commandButton id="dynaButton" value="Menu" type="button"
+				rendered="#{loginBean.userlogadoB}"
+				icon=" ui-icon-grip-dotted-horizontal" styleClass="cabecalhoInfo" />
+			<p:menu overlay="true" trigger="dynaButton" my="left top"
+				at="left bottom">
+
+				<p:menuitem value="Diária" icon="ui-icon-wrench"
+					action="/pages/administrativas/diaria.xhtml?faces-redirect=true"
+					title="Controles referentes a inspeção diária" disabled="false" />
+
+				<p:menuitem value="Mensal" icon="ui-icon-wrench"
+					action="/pages/administrativas/mensal.xhtml?faces-redirect=true"
+					title="Controles referentes a inspeção mensal" disabled="false" />
+
+				<p:menuitem value="Homologação" icon=" ui-icon-check"
+					action="/pages/administrativas/homologacao.xhtml?faces-redirect=true"
+					title="HK" disabled="false" />
+
+				<p:menuitem value="Análise DevOps" icon=" ui-icon-note"
+					action="/pages/administrativas/analise_devops.xhtml?faces-redirect=true"
+					title="Analise Sonar" disabled="false" />
+
+				<p:menuitem value="Execuções Jenkins" icon=" ui-icon-note"
+					action="/pages/administrativas/execucoes_jenkins.xhtml?faces-redirect=true"
+					title="Execuções Jenkins" disabled="false" />
+
+				<p:menuitem value="SonarQube" icon=" ui-icon-note"
+					action="/pages/administrativas/sonarQube.xhtml?faces-redirect=true"
+					title="SonarQube" disabled="false" />
+
+				<p:menuitem value="Info" icon=" ui-icon-info"
+					title="Cadastro Modulos/ Controle Sigla / Anotações"
+					action="/pages/administrativas/principal.xhtml?faces-redirect=true"
+					disabled="false" />
+
+				<p:menuitem value="Adm" icon="ui-icon-gear" title="Administração"
+					action="/pages/administrativas/usuario/administracao.xhtml?faces-redirect=true"
+					disabled="false" />
+					
+				<p:menuitem value="Config" icon="ui-icon-gear" title="Configurações"
+					action="/pages/administrativas/configuracoes.xhtml?faces-redirect=true"
+					disabled="false" />
+
+				<p:separator style="margin:10px auto auto auto;"></p:separator>
+				<p:menuitem value="Sair" actionListener="#{loginBean.sair}"
+					icon="ui-icon-extlink" style="margin:5px auto;" />
+			</p:menu>
+		</div>
+	</h:form>
+	<!--Fim do Rodapé da Página -->
+</ui:composition>

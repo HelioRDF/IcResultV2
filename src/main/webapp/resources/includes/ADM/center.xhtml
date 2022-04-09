@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:form id="formTb">
+		<p:growl id="msgGrowl" life="3000" />
+		<!-- _________________________________________________________________________________________________________________________________ -->
+		<!-- Tabelas com informações RFC/Inspeção  -->
+
+		<p:tabView id="fr" style="font-size:14px;">
+
+	
+			<!-- Controle de Siglas _________________________________________________________________________________ -->
+			<p:tab title="Controle de Siglas" closable="true" disabled="false">
+				<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+					<h:commandLink style="float:left; margin-right:5px;">
+						<h:graphicImage value="/images/excel.png" width="24" />
+						<p:dataExporter type="xls" target="dataTableControle"
+							fileName="Controle de Siglas" />
+					</h:commandLink>
+
+					<p:commandButton style="font-size:13px; float:right" id="btat"
+						rendered="true" update=":formTb:fr:dataTableControle:"
+						styleClass="add" action="#{controleSiglasBean.listarInfos}"
+						value="Atualizar" icon=" ui-icon-refresh" />
+				</p:fieldset>
+				<p:dataTable id="dataTableControle" rendered="true"
+					rowsPerPageTemplate="12,20,30,50,100" rowIndexVar="rowIndex"
+					emptyMessage="Nenhum Registro encontrado" rows="7" paginator="true"
+					var="dataVar" value="#{controleSiglasBean.listaControle}"
+					draggableColumns="true" style=" text-align:center;font-size: 12px;"
+					paginatorPosition="top">
+					<f:facet name="header">
+						<p:outputLabel value="TOTAL: #{controleSiglasBean.total}" />
+						<p:commandButton id="toggler" type="button" value="Colunas"
+							style="float:right" icon="ui-icon-calculator" />
+						<p:columnToggler datasource="dataTableControle" trigger="toggler">
+						</p:columnToggler>
+					</f:facet>
+					<!-- _________________________________________________________________________________________________________________________________ -->
+					<!-- Informações das Colunas -->
+					<p:column headerText="Ver" width="4%" exportable="false">
+						<!-- Expandir infos -->
+						<p:rowToggler />
+					</p:column>
+					<!-- <p:column headerText="Linhas" width="9%" sortBy="#{rowIndex}"> -->
+					<!-- #{rowIndex+1} -->
+					<!-- </p:column> -->
+					<p:column headerText="ID" width="10%" sortBy="#{dataVar.codigo}"
+						filterBy="#{dataVar.codigo}">
+						<p:outputLabel value="#{dataVar.codigo}" />
+					</p:column>
+					<p:column headerText="SIGLA" width="10%" sortBy="#{dataVar.sigla}"
+						filterBy="#{dataVar.sigla}">
+						<p:outputLabel value="#{dataVar.sigla}" />
+					</p:column>
+					<p:column headerText="Sistema" width="30%"
+						sortBy="#{dataVar.nomeSistema}" filterBy="#{dataVar.nomeSistema}">
+						<p:outputLabel value="#{dataVar.nomeSistema}" />
+					</p:column>
+					<p:column headerText="Gestor" width="13%"
+						sortBy="#{dataVar.gestoEntrega}"
+						filterBy="#{dataVar.gestoEntrega}">
+						<p:outputLabel value="#{dataVar.gestoEntrega}" />
+					</p:column>
+
+					<p:column headerText="Repositório" width="15%"
+						sortBy="#{dataVar.repositorio}" filterBy="#{dataVar.repositorio}">
+						<p:outputLabel value="#{dataVar.repositorio}" />
+					</p:column>
+					<p:column headerText="Andamento" width="15%"
+						sortBy="#{dataVar.andamento}" filterBy="#{dataVar.andamento}">
+						<p:outputLabel value="#{dataVar.andamento}" />
+					</p:column>
+					<!-- _________________________________________________________________________________________________________________________________ -->
+					<!-- Informações após expandir linha -->
+					<p:rowExpansion styleClass="rowEdit">
+						<p:panelGrid columns="1" columnClasses="label,value"
+							style="text-align:left;">
+							<p:outputLabel value="Responsável: #{dataVar.responsavel}" />
+							<p:column headerText="Data">
+								<p:outputLabel value="Cadastro: "></p:outputLabel>
+								<h:outputText value="#{dataVar.dataCadastro}" id="cadastro"
+									title="Cadastro:">
+									<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+										locale="pt_BR" />
+								</h:outputText>
+							</p:column>
+							<p:outputLabel value="Linguagem: #{dataVar.linguagem}" />
+							<p:outputLabel value="Mapa: #{dataVar.mapa}" />
+							<p:outputLabel value="Arquivo: #{dataVar.nomeArquivo}" />
+							<p:outputLabel value="Instruções: #{dataVar.instrucoes}" />
+							<p:column>
+								<h:outputLabel value="Descrição: "
+									style="float:left;margin:20px 10px 0px 0px;" />
+								<h:inputTextarea cols="100" rows="4" readonly="true"
+									value="#{dataVar.descricao}" />
+							</p:column>
+						</p:panelGrid>
+						<!-- <p:separator style="border: 2px solid #c1c7d9; border-radius: 100px/9px; background-color:  #d4d5e6; height:8px;"> </p:separator>  -->
+						<p:separator style=" height:10px;background-color:#e6e6ff"></p:separator>
+						<br></br>
+					</p:rowExpansion>
+				</p:dataTable>
+			</p:tab>
+			<!-- FIM Controle de Siglas _________________________________________________________________________________ -->
+
+		</p:tabView>
+	</h:form>
+</ui:composition>

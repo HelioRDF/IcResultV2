@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+	<h:form id="formTb">
+
+		<p:messages id="messages" showDetail="false" closable="true">
+			<p:autoUpdate />
+		</p:messages>
+		<p:dialog widgetVar="statusDialog" closable="false" draggable="false">
+			<p:graphicImage value="/images/loading6.gif" />
+		</p:dialog>
+		<p:fieldset legend="Analise DevOps"
+			style="margin-bottom:20px;font-size:12px;" toggleable="true"
+			toggleSpeed="500">
+
+			<!-- _________________________________________________________________________________________________________________________________ -->
+			<!-- Tabelas com informações Analise DevOps  -->
+
+			<p:tabView id="fr" style="font-size:13px;">
+
+
+
+				<!-- Lista de Módulos no Sonar  ______________________________________________________________  -->
+				<p:tab title="Lista de Paineis dos Sonares" disabled="false">
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+						<p:commandButton style="font-size:12px; float:right"
+							id="btAtualizarListaSonar" styleClass="add"
+							action="#{painelDoSonarListaGeralBean.listarInfos}"
+							rendered="true" update=":formTb:fr:dataTablePaineisSonar"
+							icon=" ui-icon-refresh" title="Atualizar" />
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTablePaineisSonar"
+								fileName="Paineis-DevOps" />
+						</h:commandLink>
+
+					</p:fieldset>
+					<p:dataTable id="dataTablePaineisSonar" rendered="true"
+						rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="7"
+						paginator="true" var="dataVar"
+						value="#{painelDoSonarListaGeralBean.listaControle}"
+						draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+
+						<f:facet name="header">
+							<p:ajaxStatus onstart="PF('statusDialog').show()"
+								onsuccess="PF('statusDialog').hide()" />
+
+							<p:outputLabel
+								value="Total: #{painelDoSonarListaGeralBean.total}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTablePaineisSonar"
+								trigger="toggler">
+							</p:columnToggler>
+						</f:facet>
+
+
+
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações das Colunas -->
+
+						<p:column headerText="Id" sortBy="#{dataVar.id}"
+							filterBy="#{dataVar.id}">
+							<p:outputLabel value="#{dataVar.id}" />
+						</p:column>
+
+						<p:column headerText="Chave" sortBy="#{dataVar.chavePainel}"
+							style="color:#409a4c;" filterBy="#{dataVar.chavePainel}">
+							<p:outputLabel value="#{dataVar.chavePainel}" />
+						</p:column>
+
+						<p:column headerText="Nome do Painel"
+							sortBy="#{dataVar.nomePainel}" filterBy="#{dataVar.nomePainel}">
+							<p:outputLabel value="#{dataVar.nomePainel}" />
+						</p:column>
+
+						<p:column headerText="Tipo do Painel"
+							sortBy="#{dataVar.tipoSonar}" filterBy="#{dataVar.tipoSonar}">
+							<p:outputLabel value="#{dataVar.tipoSonar}" />
+						</p:column>
+
+						<p:column headerText="Data Painel" id="cap"
+							sortBy="#{dataVar.ultimaAnalise}"
+							filterBy="#{dataVar.ultimaAnalise}">
+							<p:outputLabel value="#{dataVar.ultimaAnalise}">
+								<f:convertDateTime for="cap" pattern="yyyy-MM-dd"
+									timeZone="#{initParam.timeZone}" />
+							</p:outputLabel>
+						</p:column>
+
+					</p:dataTable>
+
+				</p:tab>
+				<p:tab title="Lista de Paineis do CloudBees" disabled="false">
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+						<p:commandButton style="font-size:12px; float:right"
+							id="btAtualizarListaCloudBees" styleClass="add"
+							action="#{listaCloudBeesBean.listarInfos}" rendered="true"
+							update=":formTb:fr:dataTablePaineisCloudBees"
+							icon=" ui-icon-refresh" title="Atualizar" />
+
+						<p:commandButton id="menuOpcoesListaCloudBees" value="Opções"
+							type="button" icon="ui-icon-triangle-1-s"
+							style="font-size:12px; float:right" rendered="true" />
+
+						<p:menu overlay="true" trigger="menuOpcoesListaCloudBees"
+							my="Right top" at="Right bottom" styleClass="add"
+							style="font-size:12px; float:right" rendered="true">
+
+
+							<p:menuitem value="Analisar DevOps" style="color:#0400ff;"
+								action="#{listaCloudBeesBean.realizaAnaliseDevOps}"
+								update=":formTb:fr:dataTablePaineisCloudBees:"
+								icon="ui-icon-check" disable="" />
+
+							
+
+
+
+						</p:menu>
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTablePaineisCloudBees"
+								fileName="Lista CloudBees" />
+						</h:commandLink>
+
+
+
+					</p:fieldset>
+					<p:dataTable id="dataTablePaineisCloudBees" rendered="true"
+						rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="7"
+						paginator="true" var="dataVar"
+						value="#{listaCloudBeesBean.listaControle}"
+						draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+
+						<f:facet name="header">
+							<p:ajaxStatus onstart="PF('statusDialog').show()"
+								onsuccess="PF('statusDialog').hide()" />
+
+							<p:outputLabel value="Total: #{listaCloudBeesBean.total}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTablePaineisCloudBees"
+								trigger="toggler">
+							</p:columnToggler>
+						</f:facet>
+
+
+
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações das Colunas -->
+
+						<p:column headerText="Id" sortBy="#{dataVar.id}"
+							filterBy="#{dataVar.id}">
+							<p:outputLabel value="#{dataVar.id}" />
+						</p:column>
+
+						<p:column headerText="Sigla" sortBy="#{dataVar.sigla}"
+							style="color:#409a4c;" filterBy="#{dataVar.sigla}">
+							<p:outputLabel value="#{dataVar.sigla}" />
+						</p:column>
+
+						<p:column headerText="Job" sortBy="#{dataVar.job}"
+							filterBy="#{dataVar.job}">
+							<p:outputLabel value="#{dataVar.job}" />
+						</p:column>
+
+						<p:column headerText="Nome Concatenado"
+							sortBy="#{dataVar.nomeConcatenado}"
+							filterBy="#{dataVar.nomeConcatenado}">
+							<p:outputLabel value="#{dataVar.nomeConcatenado}" />
+						</p:column>
+
+						<p:column headerText="Chave Painel"
+							sortBy="#{dataVar.chavePainel}" filterBy="#{dataVar.chavePainel}">
+							<p:outputLabel value="#{dataVar.chavePainel}" />
+						</p:column>
+
+						<p:column headerText="Data Painel Sonar" id="dataPainel"
+							sortBy="#{dataVar.dataDoPainelSonar}}"
+							filterBy="#{dataVar.dataDoPainelSonar}">
+							<p:outputLabel value="#{dataVar.dataDoPainelSonar}">
+								<f:convertDateTime for="dataPainel" pattern="yyyy-MM-dd"
+									timeZone="#{initParam.timeZone}" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Tipo do Painel"
+							sortBy="#{dataVar.tipoSonar}" filterBy="#{dataVar.tipoSonar}">
+							<p:outputLabel value="#{dataVar.tipoSonar}" />
+						</p:column>
+
+						<p:column headerText="Classifica como DevOps"
+							sortBy="#{dataVar.classificaComoDevOps}"
+							filterBy="#{dataVar.classificaComoDevOps}">
+							<p:outputLabel
+								value="#{dataVar.classificaComoDevOps}" />
+						</p:column>
+
+
+						<p:column headerText="Ver" width="4%" exportable="false">
+							<!-- Expandir infos -->
+							<p:rowToggler />
+						</p:column>
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações após expandir linha -->
+						<p:rowExpansion styleClass="rowEdit">
+
+							<p:panelGrid columns="1" columnClasses="label,value"
+								style="text-align:left;">
+
+
+
+								<p:outputLabel value="Master: #{dataVar.master}" />
+								<p:outputLabel value="Tecnologia: #{dataVar.tecnologia}" />
+								<p:outputLabel value="Url CloudBees: #{dataVar.urlCloudBees}" />
+								<p:outputLabel value="Nome Painel #{dataVar.nomePainel}" />
+								<p:outputLabel
+									value="Última Atualização: #{dataVar.dataUltimaCarga}">
+									<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+										locale="pt_BR" />
+								</p:outputLabel>
+								<p:outputLabel value="Arquivo Carga: #{dataVar.caminhoDaLista}" />
+
+							</p:panelGrid>
+						</p:rowExpansion>
+
+					</p:dataTable>
+
+				</p:tab>
+				<!-- Fim Analise DevOps  ______________________________________________________________  -->
+
+			</p:tabView>
+		</p:fieldset>
+
+	</h:form>
+</ui:composition>

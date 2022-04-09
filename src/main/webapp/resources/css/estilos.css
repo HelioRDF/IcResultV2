@@ -1,0 +1,132 @@
+@CHARSET "UTF-8";
+
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+.ui-tabs .ui-tabs-nav.ui-widget-header li.ui-state-active {
+	background-color: #a5c854;
+	
+}
+
+.ui-widget-header a{
+	font-size:11px;
+	padding: auto;
+}
+
+.ui-tabs .ui-tabs-nav.ui-widget-header li a {
+	color: #5b5b5b;
+}
+
+.ui-fieldset, .ui-fieldset .ui-fieldset-legend{
+	color:#1b2d4d;
+	
+	
+}
+.ui-fieldset-legend{
+		background: #c0cdd8;
+
+	}
+	
+
+.rowEdit {
+	background: #e5ebf1;
+}
+
+#formFiltro {
+	background-color: #efefef;
+}
+
+.home {
+	background-color: #e6e6e6;
+}
+
+p, .subt {
+	margin: 20px 15px 10px 10px;
+	text-indent: 2em;
+}
+
+.cadastro {
+	font-size: 26px;
+	color: #4ab967;
+	text-decoration: underline;
+	margin-left: 25px;
+}
+
+h1 {
+	font-size: 22px;
+	color: #bf9876;
+	background-image: url("../images/banner02.png");
+	margin: 5px auto 0 auto;
+	padding: 18px;
+	border-style: solid;
+	border-color: #C2C1D4;
+	border-width: 1px;
+	border-radius: 8px;
+	font-family: calibri;
+	height: 55px;
+}
+
+h2 {
+	background-color: #1b2d4d;
+	color: #fff;
+	font-size: 20px;
+	margin: 0% 3% 0% 0%;
+	font-family: calibri;
+	text-align: center;
+	border-radius: 8px;
+	border-style: solid;
+	border-color: #C2C1D4;
+	border-width: 1px;
+	width: 98%;
+	height: auto;
+	padding: 3px;
+}
+
+#login-dialog {
+	width: 260px;
+	margin: auto;
+	margin-top: 130px;
+}
+
+.grid-login {
+	background-color: #F2F2F2;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 5px 5px 5px 5px;
+	width: 120%
+}
+
+.menu {
+	text-align: right;
+	font-size: 16px;
+	color: #a5c854;
+	background-image: url("../images/banner02.png");
+	padding: 18px;
+	border-style: solid;
+	border-color: #C2C1D4;
+	border-width: 1px;
+	border-radius: 8px;
+	font-family: calibri;
+	height: 35px;
+}
+
+.cabecalhoInfo {
+	font-family: calibri;
+	margin: 0px 15px auto auto;
+	vertical-align: right;
+}
+
+.nameheader {
+	font-size: 20px;
+	font-family: onix;
+	margin: auto 24% auto 15%;
+	vertical-align: center;
+}

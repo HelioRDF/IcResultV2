@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:form id="formTb">
+		<p:growl id="msgGrowl" life="3000" />
+		<p:messages id="messages" showDetail="false" closable="true">
+			<p:autoUpdate />
+		</p:messages>
+		<p:dialog widgetVar="statusDialog" closable="false" resizable="false">
+			<p:graphicImage value="/images/loading6.gif" />
+		</p:dialog>
+		<p:tabView id="fr" style="font-size:13px;">
+			<!-- Tab Configurações  -->
+			<p:tab title="Configurações" closable="true" disabled="false">
+				<p:panel id="parametros_sonar" header="Parâmetros SonarQube"
+					footer="Configuração de Acesso SonarQube"
+					style="margin-bottom:20px">
+
+					<p:dialog header="Confirmar seleção da configuração?"
+						id="selecaoConfSonar" widgetVar="selecaoConfSonar"
+						showEffect="fade" hideEffect="fade" resizable="false" width="220"
+						style="width:14px;">
+						<p:outputPanel id="detalhes_conf_sonar" style="text-align:center;">
+							<h:outputText
+								value="#{configBean.configuracaoSelecionada.url} - #{configBean.configuracaoSelecionada.login}"
+								style="display:block" />
+						</p:outputPanel>
+						<h:panelGrid columns="2" style="margin:auto;">
+							<p:commandButton value="SIM"
+								oncomplete="PF('selecaoConfSonar').hide();"
+								style="color:#8c1515; font-size:15px;" icon="ui-icon-check"
+								update="formTb:fr:dataTableConfiguracaoSonar"
+								actionListener="#{configBean.salvarConfiguracaoPadrao}" />
+							<p:commandButton value="NÃO" style="color:blue;font-size:15px;"
+								oncomplete="PF('selecaoConfSonar').hide();"
+								icon="ui-icon-closethick" />
+						</h:panelGrid>
+					</p:dialog>
+					<br />
+
+					<h:panelGrid columns="2" style="width:35%">
+
+						<p:outputLabel value="URL:" />
+						<p:inputText
+							placeholder="Link do SonarQube= http://sonar.produbanbr.corp/"
+							style="width:150%;" value="#{configBean.urlSonar}" />
+
+						<p:outputLabel value="Usuário:" />
+						<p:inputText placeholder="Usuário Sonar " style="width:50%;"
+							autocomplete="false" value="#{configBean.userSonar}" />
+
+						<p:outputLabel value="Senha:" />
+						<p:password placeholder="Senha Sonar" autocomplete="false"
+							style="width:50%; margin-bottom:15px;"
+							value="#{configBean.acessoSonarTemp}" />
+
+					</h:panelGrid>
+
+					<br />
+
+					<p:commandButton value="Salvar"
+						action="#{configBean.salvarNovaConfiguracaoSonar}"
+						style="margin:2% auto 2% auto; background:#4e4f7f; color:#fff; font-size:14px; text-shadow:none; padding:5px;" />
+					<br />
+					<p:dataTable id="dataTableConfiguracaoSonar" var="confSonar"
+						value="#{configBean.configuracoesSonar}" selectionMode="single"
+						selection="#{configBean.configuracaoSelecionada}"
+						emptyMessage="Não há configurações cadastradas"
+						rowKey="#{confSonar.id}" style="margin-bottom:0;width:50%;">
+						<f:facet name="header">
+            					Configurações do SonarQube cadastradas
+        					</f:facet>
+
+						<p:column headerText="URL">
+							<p:outputLabel value="#{confSonar.url}" />
+						</p:column>
+						<p:column headerText="Login">
+							<p:outputLabel value="#{confSonar.login}" />
+						</p:column>
+						<p:column headerText="Conta Selecionada">
+							<p:outputLabel value="#{confSonar.padrao?'SIM':'NÃO'}" />
+						</p:column>
+
+						<f:facet name="footer">
+							<p:commandButton process="dataTableConfiguracaoSonar"
+								update="@form formTb:fr:selecaoConfSonar " icon="ui-icon-pin-s"
+								value="Selecionar Configuração"
+								oncomplete="PF('selecaoConfSonar').show()" />
+						</f:facet>
+
+					</p:dataTable>
+
+
+					<br />
+
+				</p:panel>
+
+				<p:panel id="parametros_git" header="Parâmetros Git"
+					footer="Configuração de Acesso Git" style="margin-bottom:20px">
+
+					<p:dialog header="Excluir configurações selecionados?"
+						id="selecaoConfGit" widgetVar="selecaoConfGit" showEffect="fade"
+						hideEffect="fade" resizable="false" width="220"
+						style="width:14px;">
+						<p:outputPanel id="detalhes_conf_git" style="text-align:center;">
+							<ui:repeat value="#{configBean.configuracoesGitSelecionadas}"
+								var="conf_git">
+								<h:outputText value="#{conf_git.url} - #{conf_git.login}"
+									style="display:block" />
+							</ui:repeat>
+						</p:outputPanel>
+						<h:panelGrid columns="2" style="margin:auto;">
+							<p:commandButton value="SIM"
+								oncomplete="PF('selecaoConfGit').hide();"
+								style="color:#8c1515; font-size:15px;" icon="ui-icon-check"
+								update="formTb:fr:dataTableConfiguracoesGit"
+								actionListener="#{configBean.excluirConfiguracoesGitSelecionadas}" />
+							<p:commandButton value="NÃO" style="color:blue;font-size:15px;"
+								oncomplete="PF('selecaoConfGit').hide();"
+								icon="ui-icon-closethick" />
+						</h:panelGrid>
+					</p:dialog>
+					<p:messages closable="true" for="git" id="git" />
+					<br />
+					<h:panelGrid columns="2" style="width:35%">
+
+						<p:outputLabel value="URL:" />
+						<p:inputText
+							placeholder="Link do Git = gitlab.produbanbr.corp o link sem o https://"
+							style="width:150%;" value="#{configBean.urlGit}" />
+
+						<p:outputLabel value="Usuário:" />
+						<p:inputText placeholder="Usuário Git " style="width:50%;"
+							autocomplete="false" value="#{configBean.userGit}" />
+
+						<p:outputLabel value="Senha:" />
+						<p:password placeholder="Senha Git" autocomplete="false"
+							style="width:50%; margin-bottom:15px;"
+							value="#{configBean.acessoGitTemp}" />
+
+					</h:panelGrid>
+					<p:selectBooleanCheckbox itemLabel="Utilizar Padrão" />
+
+					<br />
+
+					<p:commandButton value="Salvar" action="#{configBean.salvarGit}"
+						update="@form"
+						style="margin:2% auto 2% auto; background:#4e4f7f; color:#fff; font-size:14px; text-shadow:none; padding:5px;" />
+
+
+					<br />
+					<p:dataTable id="dataTableConfiguracoesGit" var="confGit"
+						widgetVar="dataTableConfiguracoesGit"
+						value="#{configBean.configuracoesGit}"
+						selection="#{configBean.configuracoesGitSelecionadas}"
+						emptyMessage="Não há configurações cadastradas"
+						rowKey="#{confGit.id}" style="margin-bottom:0;width:50%;">
+						<f:facet name="header">
+            					Configurações Git Cadastradas
+        					</f:facet>
+						<p:column selectionMode="multiple"
+							style="width:16px;text-align:center" />
+						<p:column headerText="URL">
+							<p:outputLabel value="#{confGit.url}" />
+						</p:column>
+						<p:column headerText="Login">
+							<p:outputLabel value="#{confGit.login}" />
+						</p:column>
+						<f:facet name="footer">
+							<p:commandButton process="dataTableConfiguracoesGit"
+								update="@form formTb:fr:selecaoConfGit" icon="ui-icon-trash"
+								value="Deletar" oncomplete="PF('selecaoConfGit').show()" />
+						</f:facet>
+					</p:dataTable>
+				</p:panel>
+			</p:tab>
+			<!-- Fim da tab Configurações -->
+		</p:tabView>
+
+	</h:form>
+</ui:composition>

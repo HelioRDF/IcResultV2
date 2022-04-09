@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+	<h:form id="formTb">
+		<p:growl id="msgGrowl" life="3000" />
+		<p:messages id="messages" showDetail="true" closable="true">
+			<p:autoUpdate />
+		</p:messages>
+		<p:dialog widgetVar="statusDialog" closable="false" resizable="false">
+			<p:graphicImage value="/images/loading6.gif" />
+		</p:dialog>
+
+		<!-- Dialogo Excluir -->
+		<p:dialog widgetVar="confirmeDialog"
+			header="Excluir ID: #{relacaoProjetoSiglaGestorBean.obj.id}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('confirmeDialog').hide();"
+					action="#{relacaoProjetoSiglaGestorBean.excluir}"
+					style="color:#8c1515; font-size:15px;" update=":formTb:"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+				<p:commandButton value="NÃO" onclick="PF('confirmeDialog').hide();"
+					style="color:blue;font-size:15px;" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+			</h:panelGrid>
+		</p:dialog>
+
+		<!-- Dialog Cadastro de Notas  -->
+		<p:dialog header="Adicionar Nota" widgetVar="dlgCadastroNotas"
+			showEffect="explode" hideEffect="explode" height="120px"
+			responsive="true" resizable="false">
+			<h:panelGrid columns="1">
+
+				<p:outputLabel style="font-size:12px" value="Nota:" for="nota" />
+				<p:inputTextarea id="nota" autoResize="false" maxlength="500"
+					size="23" style="font-size:14px; width:200px; resize:none"
+					value="#{anotacoesBean.novaAnotacao.mensagem}" />
+				<p:commandButton
+					style="font-size:13px; position: absolute; bottom:15px;left: 20px; "
+					value="Salvar" action="#{anotacoesBean.adicionarAnotacao}"
+					update="@form" icon="ui-icon-circle-check" />
+			</h:panelGrid>
+		</p:dialog>
+		<!-- Fim Dialog Cadastro de Notas -->
+
+		<!-- _________________________________________________________________________________________________________________________________ -->
+		<!-- Tabelas com informações RFC/Inspeção  -->
+
+		<p:tabView id="fr" style="font-size:13px;">
+
+
+			<!-- Controle de Siglas _________________________________________________________________________________ -->
+			<p:tab title="Controle de Siglas" closable="true" disabled="false">
+
+
+
+
+				<p:dataTable id="dataTableControle" rendered="true"
+					rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+					emptyMessage="Nenhum Registro encontrado" rows="7" paginator="true"
+					var="dataVar" value="#{controleSiglasBean.listaControle}"
+					draggableColumns="true" style=" text-align:center;font-size: 12px;"
+					paginatorPosition="top">
+					<f:facet name="header">
+
+						<p:outputLabel value="Total: #{controleSiglasBean.total}" />
+						<p:commandButton id="toggler" type="button" value="Colunas"
+							style="float:right" icon="ui-icon-calculator" />
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableControle"
+								fileName="Controle de Siglas" />
+						</h:commandLink>
+
+						<p:commandButton style="font-size:12px; float:right" id="btat"
+							rendered="true" update=":formTb:fr:dataTableControle:"
+							styleClass="add" action="#{controleSiglasBean.listarInfos}"
+							icon=" ui-icon-refresh" title="Atualizar" />
+
+						<p:columnToggler datasource="dataTableControle" trigger="toggler">
+						</p:columnToggler>
+
+						<!-- Animação de loading -->
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide()" />
+
+
+					</f:facet>
+					<!-- _________________________________________________________________________________________________________________________________ -->
+					<!-- Informações das Colunas -->
+					<p:column headerText="Ver" width="4%" exportable="false">
+						<!-- Expandir infos -->
+						<p:rowToggler />
+					</p:column>
+					<!-- <p:column headerText="Linhas" width="9%" sortBy="#{rowIndex}"> -->
+					<!-- #{rowIndex+1} -->
+					<!-- </p:column> -->
+					<p:column headerText="Id" width="10%" sortBy="#{dataVar.codigo}"
+						filterBy="#{dataVar.codigo}">
+						<p:outputLabel value="#{dataVar.codigo}" />
+					</p:column>
+					<p:column headerText="Sigla" width="10%" sortBy="#{dataVar.sigla}"
+						filterBy="#{dataVar.sigla}">
+						<p:outputLabel value="#{dataVar.sigla}" />
+					</p:column>
+					<p:column headerText="Sistema" width="30%"
+						sortBy="#{dataVar.nomeSistema}" filterBy="#{dataVar.nomeSistema}">
+						<p:outputLabel value="#{dataVar.nomeSistema}" />
+					</p:column>
+					<p:column headerText="Gestor" width="13%"
+						sortBy="#{dataVar.nivel2}" filterBy="#{dataVar.nivel2}">
+						<p:outputLabel value="#{dataVar.nivel2}" />
+					</p:column>
+
+					<p:column headerText="Espanha" width="8%"
+						sortBy="#{dataVar.espanha}" filterBy="#{dataVar.espanha}">
+						<p:outputLabel value="#{dataVar.espanha}" />
+					</p:column>
+
+					<p:column headerText="RTC" width="8%" sortBy="#{dataVar.rtc}"
+						filterBy="#{dataVar.rtc}">
+						<p:outputLabel value="#{dataVar.rtc}" />
+					</p:column>
+
+					<p:column headerText="Git" width="8%" sortBy="#{dataVar.git}"
+						filterBy="#{dataVar.git}">
+						<p:outputLabel value="#{dataVar.git}" />
+					</p:column>
+
+					<p:column headerText="DevOps" width="8%" sortBy="#{dataVar.devOps}"
+						filterBy="#{dataVar.devOps}">
+						<p:outputLabel value="#{dataVar.devOps}" />
+					</p:column>
+
+					<!-- _________________________________________________________________________________________________________________________________ -->
+					<!-- Informações após expandir linha -->
+					<p:rowExpansion styleClass="rowEdit">
+						<p:panelGrid columns="1" columnClasses="label,value"
+							style="text-align:left;">
+							<p:column headerText="Data">
+								<p:outputLabel value="Cadastro: "></p:outputLabel>
+								<h:outputText value="#{dataVar.dataCadastro}" id="cadastro"
+									title="Cadastro:">
+									<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+										locale="pt_BR" />
+								</h:outputText>
+							</p:column>
+							<p:outputLabel value="Linguagem: #{dataVar.linguagem}" />
+							<p:outputLabel value="Mapa: #{dataVar.mapa}" />
+							<p:outputLabel value="Arquivo: #{dataVar.nomeArquivo}" />
+							<p:outputLabel value="Projeto Arsenal: #{dataVar.projetoArsenal}" />
+							<p:outputLabel value="Team Area: #{dataVar.teamArea}" />
+							<p:outputLabel value="Workspace: #{dataVar.workspace}" />
+							<p:outputLabel
+								value="Inclusão/Exclusão: #{dataVar.inclusaoExclusao}" />
+							<p:outputLabel value="Gestor nivel 1: #{dataVar.nivel1}" />
+							<p:outputLabel value="Gestor nivel 2: #{dataVar.nivel2}" />
+							<p:separator style=" height:10px;background-color:#e6e6ff"></p:separator>
+
+							<p:column>
+								<br></br>
+								<h:inputTextarea cols="100" rows="25" readonly="true"
+									title="Instruções:" value="Instruções: #{dataVar.instrucoes}" />
+								<br></br>
+							</p:column>
+						</p:panelGrid>
+						<!-- <p:separator style="border: 2px solid #c1c7d9; border-radius: 100px/9px; background-color:  #d4d5e6; height:8px;"> </p:separator>  -->
+
+					</p:rowExpansion>
+				</p:dataTable>
+			</p:tab>
+			<!-- FIM Controle de Siglas _________________________________________________________________________________ -->
+
+
+			<!-- ProjetoSigla _________________________________________________________________________________ -->
+			<p:tab title="Cadastro Módulos" closable="true" disabled="false">
+
+				<p:dataTable id="dataTableProjetoSigla" rendered="true"
+					rowsPerPageTemplate="7,10,20,30,50,100" rowIndexVar="rowIndex"
+					emptyMessage="Nenhum Registro encontrado" rows="7" paginator="true"
+					var="dataVar" value="#{relacaoProjetoSiglaGestorBean.listaObj}"
+					draggableColumns="true" style=" text-align:center;font-size: 12px;"
+					paginatorPosition="top">
+					<f:facet name="header">
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableProjetoSigla"
+								fileName="Cadastro Módulos" />
+						</h:commandLink>
+
+						<p:outputLabel
+							value="Total: #{relacaoProjetoSiglaGestorBean.total}" />
+						<p:commandButton id="toggler" type="button" value="Colunas"
+							style="float:right" icon="ui-icon-calculator" />
+
+						<p:commandButton style="font-size:12px; float:right" id="atps"
+							rendered="true" update=":formTb:fr:dataTableProjetoSigla:"
+							styleClass="add"
+							action="#{relacaoProjetoSiglaGestorBean.listarInfos}"
+							icon="ui-icon-refresh" title="Atualizar" />
+
+						<p:columnToggler datasource="dataTableProjetoSigla"
+							trigger="toggler">
+						</p:columnToggler>
+
+						<!-- Animação de loading -->
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide()" />
+					</f:facet>
+					<!-- _________________________________________________________________________________________________________________________________ -->
+					<!-- Informações das Colunas -->
+
+
+					<p:column headerText="Id" width="5%" sortBy="#{dataVar.id}"
+						filterBy="#{dataVar.id}">
+						<p:outputLabel value="#{dataVar.id}" />
+					</p:column>
+					<p:column headerText="Sigla" width="6%" sortBy="#{dataVar.sigla}"
+						filterBy="#{dataVar.sigla}">
+						<p:outputLabel value="#{dataVar.sigla}" />
+					</p:column>
+					<p:column headerText="Projeto" width="25%"
+						sortBy="#{dataVar.nome_Projeto}"
+						filterBy="#{dataVar.nome_Projeto}">
+						<p:outputLabel value="#{dataVar.nome_Projeto}" />
+					</p:column>
+					<p:column headerText="Chave" width="20%" sortBy="#{dataVar.chave}"
+						filterBy="#{dataVar.chave}">
+						<p:outputLabel value="#{dataVar.chave}" />
+					</p:column>
+					<p:column headerText="DevOps" width="6%" sortBy="#{dataVar.devOps}"
+						filterBy="#{dataVar.devOps}">
+						<p:outputLabel value="#{dataVar.devOps}" />
+					</p:column>
+
+					<p:column headerText="Config" width="6%">
+						<!-- Excluir -->
+						<p:commandButton style="margin:auto;" update="@form"
+							actionListener="#{relacaoProjetoSiglaGestorBean.selecionarObj}"
+							icon="ui-icon-trash" oncomplete="PF('confirmeDialog').show();">
+							<f:attribute name="meuSelect" value="#{dataVar}" />
+						</p:commandButton>
+
+					</p:column>
+
+				</p:dataTable>
+
+			</p:tab>
+			<!-- FIM Cadastro Módulos _________________________________________________________________________________ -->
+
+			<!-- Anotações _________________________________________________________________________________ -->
+			<p:tab title="Anotações" closable="true" disabled="false">
+
+				<p:dataTable id="dataTableAnotacoes" rendered="true"
+					rowsPerPageTemplate="7,10,20,30,50,100" rowIndexVar="rowIndex"
+					emptyMessage="Nenhum Registro encontrado" rows="7" paginator="true"
+					var="dataVar" value="#{anotacoesBean.listaNotas}"
+					draggableColumns="true" style=" text-align:center;font-size: 12px;"
+					paginatorPosition="top">
+					<f:facet name="header">
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableAnotacoes"
+								fileName="Anotacoes" />
+						</h:commandLink>
+
+						<p:outputLabel value="Total: #{anotacoesBean.total}" />
+						<p:commandButton id="toggler" type="button" value="Colunas"
+							style="float:right" icon="ui-icon-calculator" />
+
+						<p:commandButton style="font-size:12px; float:right"
+							id="btnAtualizar" rendered="true"
+							update=":formTb:fr:dataTableAnotacoes:" styleClass="add"
+							action="#{anotacoesBean.listarInfos}" icon="ui-icon-refresh"
+							title="Atualizar" />
+
+						<p:commandButton style="font-size:12px; float:right"
+							id="incluiNota" rendered="true"
+							update=":formTb:fr:dataTableAnotacoes:" styleClass="add"
+							oncomplete="PF('dlgCadastroNotas').show();" title="Nova Anotação"
+							icon="ui-icon-plusthick" />
+
+						<p:columnToggler datasource="dataTableAnotacoes" trigger="toggler">
+
+						</p:columnToggler>
+
+						<!-- Animação de loading -->
+						<p:ajaxStatus onstart="PF('statusDialog').show()"
+							onsuccess="PF('statusDialog').hide()" />
+					</f:facet>
+					<!-- _________________________________________________________________________________________________________________________________ -->
+					<!-- Informações das Colunas -->
+
+
+					<p:column headerText="Mensagem" width="70%"
+						sortBy="#{dataVar.mensagem}" filterBy="#{dataVar.mensagem}">
+						<p:outputLabel value="#{dataVar.mensagem}" />
+					</p:column>
+					<p:column headerText="Usuario" width="20%"
+						sortBy="#{dataVar.usuario}" filterBy="#{dataVar.usuario}">
+						<p:outputLabel value="#{dataVar.usuario}" />
+					</p:column>
+					<p:column headerText="Data Inclusão" width="10%"
+						sortBy="#{dataVar.dataInclusao}" id="ins"
+						filterBy="#{dataVar.dataInclusao}">
+						<p:outputLabel value="#{dataVar.dataInclusao}">
+							<f:convertDateTime for="ins" pattern="dd-MM-yyyy" locale="pt_BR" />
+						</p:outputLabel>
+					</p:column>
+				</p:dataTable>
+
+			</p:tab>
+		</p:tabView>
+		<!-- FIM Tabela Anotações _________________________________________________________________________________ -->
+	</h:form>
+</ui:composition>

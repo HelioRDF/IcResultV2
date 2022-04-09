@@ -1,0 +1,826 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+	<h:form id="formTb">
+
+		<p:messages id="messages" showDetail="false" closable="true">
+			<p:autoUpdate />
+		</p:messages>
+		<p:dialog widgetVar="statusDialog" closable="false" draggable="false">
+			<p:graphicImage value="/images/loading6.gif" />
+		</p:dialog>
+
+		<!-- Caixas Dialogo Controle Git  -->
+		<!-- Dialogo Para Confirmar Download dos Pacotes -->
+		<p:dialog widgetVar="DialogoDownloadTodosModulosGit"
+			header="Deseja BAIXAR todos os modulos do Git?">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('DialogoDownloadTodosModulosGit').hide();"
+					style="color:#8c1515; font-size:15px;" icon="ui-icon-refresh"
+					action="#{controleGitDevBean.executaGitClone}">
+
+				</p:commandButton>
+
+				<p:commandButton value="NÃO" style="color:blue;font-size:15px;"
+					oncomplete="PF('DialogoDownloadTodosModulosGit').hide();"
+					icon="ui-icon-check" />
+
+			</h:panelGrid>
+		</p:dialog>
+
+
+		<p:dialog header="Informações de E-mail" widgetVar="dlgEnviarEmail"
+			showEffect="explode" hideEffect="bounce" height="180"
+			resizable="false" responsive="true">
+			<h:panelGrid columns="1">
+
+				<p:outputLabel style="font-size:12px"
+					value="E-mail Origem (Office 365)" for="emailOrigem1" />
+				<p:inputText id="emailOrigem1" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{analise_DevDiarioBean.origemEMail}" />
+
+				<p:outputLabel style="font-size:12px" value="Senha E-mail"
+					for="senha1" />
+				<p:password id="senha1" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{analise_DevDiarioBean.chaveEMail}" />
+
+				<p:outputLabel style="font-size:12px" value="E-mail Destino"
+					for="emailDestino1" />
+				<p:inputText id="emailDestino1" size="23"
+					style="font-size:14px; width:200px;"
+					value="#{analise_DevDiarioBean.destinoEMail}" />
+				<br />
+				<p:commandButton style="font-size:13px; bottom:15px;"
+					actionListener="#{analise_DevDiarioBean.enviarEmailBlockerCriticals}"
+					update="@form" value="Enviar e-maill" icon="ui-icon-circle-check" />
+			</h:panelGrid>
+		</p:dialog>
+
+
+
+		<!-- Dialogo Selecionar Tipo de Execução do Sonar RTC-->
+		<p:dialog widgetVar="DialogoSelecionarTipoExSonarRTC"
+			header="Executar Sonar por:">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="Siglas Atualizadas"
+					oncomplete="PF('DialogoSelecionarTipoExSonarRTC').hide();"
+					style="color:#8c1515; font-size:15px;" icon="ui-icon-refresh"
+					action="#{controleRtcDevBean.executarTodasSiglasAtualizadas}" />
+
+				<p:commandButton value="Siglas pré-selecionados"
+					style="color:blue;font-size:15px;"
+					oncomplete="PF('DialogoSelecionarTipoExSonarRTC').hide();"
+					actionListener="#{controleRtcDevBean.executarSonarPorSiglasSelecionadas}"
+					icon="ui-icon-check">
+					<f:attribute name="tabela"
+						value="#{controleRtcDevBean.listaControle}" />
+				</p:commandButton>
+
+			</h:panelGrid>
+			<h:outputLabel
+				value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+		</p:dialog>
+		<!-- Dialogo Executar Sonar Sigla RTC-->
+		<p:dialog widgetVar="confirmeDialogRTC"
+			header="Deseja executar SIGLA : #{controleRtcDevBean.obj.sigla}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('confirmeDialogRTC').hide();"
+					action="#{controleRtcDevBean.executarSonar}"
+					style="color:#8c1515; font-size:15px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+				<p:commandButton value="NÃO"
+					onclick="PF('confirmeDialogRTC').hide();"
+					style="color:blue;font-size:15px;" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+			</h:panelGrid>
+			<h:outputLabel
+				value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+		</p:dialog>
+		<!-- Dialogo Capturar SIGLA RTC-->
+		<p:dialog widgetVar="confirmeDialogCapturaRTC"
+			header="Deseja capturar Sigla : #{controleRtcDevBean.obj.sigla}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('confirmeDialogCapturaRTC').hide();"
+					action="#{controleRtcDevBean.capturar}"
+					style="color:#8c1515; font-size:15px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+				<p:commandButton value="NÃO"
+					onclick="PF('confirmeDialogCapturaRTC').hide();"
+					style="color:blue;font-size:15px;" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+			</h:panelGrid>
+			<h:outputLabel
+				value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+		</p:dialog>
+
+		<!-- Caixas Dialogo Módulos Git -->
+		<p:dialog widgetVar="DialogoSelecionarTipoCapturaGit"
+			header="Executar a captura por:">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="Pacotes Atualizadas"
+					oncomplete="PF('DialogoSelecionarTipoCapturaGit').hide();"
+					style="color:#8c1515; font-size:15px;" icon="ui-icon-refresh"
+					action="#{controleGitDevBean.executarCapturaPorModulosAtualizados}" />
+
+				<p:commandButton value="Modulos pré-selecionados"
+					oncomplete="PF('DialogoSelecionarTipoCapturaGit').hide();"
+					style="color:blue;font-size:15px;"
+					actionListener="#{controleGitDevBean.executarCapturaPorModulosSelecionados}"
+					icon="ui-icon-check">
+					<f:attribute name="tabela"
+						value="#{controleGitDevBean.listaControle}" />
+				</p:commandButton>
+			</h:panelGrid>
+			<h:outputLabel
+				value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+		</p:dialog>
+		<p:dialog widgetVar="DialogoSelecionarTipoExSonarGit"
+			header="Executar o Sonar por:">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="Pacotes Atualizadas"
+					oncomplete="PF('DialogoSelecionarTipoExSonarGit').hide();"
+					style="color:#8c1515; font-size:15px;" icon="ui-icon-refresh"
+					action="#{controleGitDevBean.executarSonarModulosAtualizados}" />
+
+				<p:commandButton value="Modulos pré-selecionados"
+					style="color:blue;font-size:15px;"
+					oncomplete="PF('DialogoSelecionarTipoExSonarGit').hide();"
+					actionListener="#{controleGitDevBean.executarSonarPorModulosSelecionados}"
+					icon="ui-icon-check">
+					<f:attribute name="tabela"
+						value="#{controleGitDevBean.listaControle}" />
+				</p:commandButton>
+			</h:panelGrid>
+			<h:outputLabel
+				value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+		</p:dialog>
+		<!-- Dialogo Executar Sonar -->
+		<p:dialog widgetVar="confirmeDialogModulosGit"
+			header="Deseja executar modulo : #{controleGitDevBean.obj.pacoteChaveNomePainelSonar}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('confirmeDialogModulosGit').hide();"
+					action="#{controleGitDevBean.executarSonar}"
+					style="color:#8c1515; font-size:15px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+				<p:commandButton value="NÃO"
+					onclick="PF('confirmeDialogModulosGit').hide();"
+					style="color:blue;font-size:15px;" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+			</h:panelGrid>
+			<h:outputLabel
+				value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+		</p:dialog>
+		<!-- Dialogo Capturar -->
+		<p:dialog widgetVar="confirmeDialogCapturaModulosGit"
+			header="Deseja capturar modulo : #{controleGitDevBean.obj.pacoteChaveNomePainelSonar}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('confirmeDialogCapturaModulosGit').hide();"
+					action="#{controleGitDevBean.capturar}"
+					style="color:#8c1515; font-size:15px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+				<p:commandButton value="NÃO"
+					onclick="PF('confirmeDialogCapturaModulosGit').hide();"
+					style="color:blue;font-size:15px;" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+			</h:panelGrid>
+			<h:outputLabel
+				value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+		</p:dialog>
+
+
+		<!-- Caixa de Dialogo Analise Diaria -->
+		<!-- Dialogo Confirma Exclusao de Analise -->
+		<p:dialog widgetVar="DialogoConfirmarExclusaoAnaliseDiaria"
+			header="Deseja (EXCLUIR) todas as analises selecionadas?">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('DialogoConfirmarExclusaoAnaliseDiaria').hide();"
+					style="color:#8c1515; font-size:15px;" icon="ui-icon-refresh"
+					actionListener="#{analise_DevDiarioBean.excluirAnalises}">
+					<f:attribute name="tabela"
+						value="#{analise_DevDiarioBean.listaAnalise}" />
+				</p:commandButton>
+
+				<p:commandButton value="NÃO" style="color:blue;font-size:15px;"
+					oncomplete="PF('DialogoConfirmarExclusaoAnaliseDiaria').hide();"
+					icon="ui-icon-check" />
+
+			</h:panelGrid>
+		</p:dialog>
+
+
+		<p:fieldset legend="Inspeção Diária"
+			style="margin-bottom:20px;font-size:12px;" toggleable="true"
+			toggleSpeed="500">
+
+			<!-- _________________________________________________________________________________________________________________________________ -->
+			<!-- Tabelas com informações Analise Dev  -->
+
+			<p:tabView id="fr" style="font-size:13px;">
+
+
+
+				<!--Analise Diaria ______________________________________________________________  -->
+				<p:tab title="Analise Diária" closable="true" disabled="false">
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+						<p:commandButton style="font-size:12px; float:right"
+							id="btAtualizarDevDiaria" styleClass="add"
+							action="#{analise_DevDiarioBean.listarInfos}" rendered="true"
+							update=":formTb:fr:dataTableAnaliseDEVDiaria"
+							icon=" ui-icon-refresh" title="Atualizar" />
+
+						<p:commandButton id="menuOpcoesAnaliseDiaria" value="Opções"
+							type="button" icon="ui-icon-triangle-1-s"
+							style="font-size:12px; float:right" rendered="true" />
+
+						<p:menu overlay="true" trigger="menuOpcoesAnaliseDiaria"
+							my="Right top" at="Right bottom" styleClass="add"
+							style="font-size:12px; float:right" rendered="true">
+
+							<p:menuitem style="font-size:12px; float:right"
+								id="btCalNotaResultadoDevDiariaCritical" styleClass="add"
+								action="#{analise_DevDiarioBean.calcNotaResultadoBlockersCriticals}"
+								value="Nota+Resultado" rendered="true"
+								update=":formTb:fr:dataTableAnaliseDEVDiaria" icon="ui-icon-pin" />
+
+							<p:menuitem style="font-size:12px; float:right" styleClass="add"
+								oncomplete="PF('DialogoConfirmarExclusaoAnaliseDiaria').show()"
+								value="Excluir Analises" rendered="true"
+								update=":formTb:fr:dataTableAnaliseDEVDiaria"
+								icon="ui-icon-closethick" />
+
+						</p:menu>
+
+						<p:commandButton value="Enviar E-MAIL" type="button"
+							style="font-size:12px;" icon="ui-icon-mail-open"
+							onclick="PF('dlgEnviarEmail').show();" />
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableAnaliseDEVDiaria"
+								fileName="Analise-DEV" />
+						</h:commandLink>
+
+					</p:fieldset>
+					<p:dataTable id="dataTableAnaliseDEVDiaria" rendered="true"
+						rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="7"
+						paginator="true" var="dataVar"
+						value="#{analise_DevDiarioBean.listaAnalise}"
+						draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+
+						<f:facet name="header">
+							<p:ajaxStatus onstart="PF('statusDialog').show()"
+								onsuccess="PF('statusDialog').hide()" />
+
+							<p:outputLabel value="Total: #{analise_DevDiarioBean.total}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTableAnaliseDEVDiaria"
+								trigger="toggler">
+							</p:columnToggler>
+						</f:facet>
+
+
+
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações das Colunas -->
+
+						<!-- <p:column headerText="Linhas" width="9%" sortBy="#{rowIndex}"> -->
+						<!-- #{rowIndex+1} -->
+						<!-- </p:column> -->
+						<p:column headerText="Id" width="9%" sortBy="#{dataVar.id}"
+							filterBy="#{dataVar.id}">
+							<p:outputLabel value="#{dataVar.id}" />
+						</p:column>
+
+						<p:column headerText="Sigla" width="10%" sortBy="#{dataVar.sigla}"
+							style="color:#409a4c;" filterBy="#{dataVar.sigla}">
+							<p:outputLabel value="#{dataVar.sigla}" />
+						</p:column>
+
+						<p:column headerText="Sistema" width="15%"
+							sortBy="#{dataVar.nomeProjeto}" filterBy="#{dataVar.nomeProjeto}">
+							<p:outputLabel value="#{dataVar.nomeProjeto}" />
+						</p:column>
+
+						<p:column headerText="Linhas.Cod" width="12%"
+							sortBy="#{dataVar.linhaCodigo}" filterBy="#{dataVar.linhaCodigo}">
+							<p:outputLabel value="#{dataVar.linhaCodigo}" />
+						</p:column>
+
+						<p:column headerText="Blockers" width="10%" style="color:#a71717;"
+							sortBy="#{dataVar.issuesMuitoAlta}"
+							filterBy="#{dataVar.issuesMuitoAlta}">
+							<p:outputLabel value="#{dataVar.issuesMuitoAlta}" />
+						</p:column>
+
+						<p:column headerText="Blockers.Ref" width="11%"
+							sortBy="#{dataVar.blockerReferencia}"
+							filterBy="#{dataVar.blockerReferencia}">
+							<p:outputLabel value="#{dataVar.blockerReferencia}" />
+						</p:column>
+
+						<p:column headerText="Critical" width="11%"
+							sortBy="#{dataVar.issuesAlta}" filterBy="#{dataVar.issuesAlta}">
+							<p:outputLabel value="#{dataVar.issuesAlta}" />
+						</p:column>
+
+						<p:column headerText="Critical.Ref" width="11%"
+							sortBy="#{dataVar.criticalReferencia}"
+							filterBy="#{dataVar.criticalReferencia}">
+							<p:outputLabel value="#{dataVar.criticalReferencia}" />
+						</p:column>
+
+						<p:column headerText="Nota" width="10%" style="color:#1155ff;"
+							sortBy="#{dataVar.notaProjeto}" filterBy="#{dataVar.notaProjeto}">
+							<p:outputLabel value="#{dataVar.notaProjeto}" />
+						</p:column>
+
+
+						<p:column headerText="Resultado" width="10%"
+							sortBy="#{dataVar.resultado}" filterBy="#{dataVar.resultado}">
+							<p:outputLabel value="#{dataVar.resultado}" />
+						</p:column>
+
+						<p:column headerText="Data.Cap" width="11%" id="cap"
+							sortBy="#{dataVar.dataCaptura}" filterBy="#{dataVar.dataCaptura}">
+							<p:outputLabel value="#{dataVar.dataCaptura}">
+								<f:convertDateTime for="cap" pattern="yyyy-MM-dd"
+									timeZone="#{initParam.timeZone}" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Selecionar" width="10%"
+							sortBy="#{dataVar.selecionado}">
+							<!-- Seleciona modulos para execução do sonar ou captura em grupo -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Seleciona analise para exclusão"
+								actionListener="#{analise_DevDiarioBean.selecionarAnalise}"
+								icon="#{dataVar.selecionado}">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+						</p:column>
+
+
+						<p:column headerText="Ver" width="4%" exportable="false">
+							<!-- Expandir infos -->
+							<p:rowToggler />
+						</p:column>
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações após expandir linha -->
+						<p:rowExpansion styleClass="rowEdit">
+							<p:panelGrid columns="1" columnClasses="label,value"
+								style="text-align:left;">
+								<p:outputLabel value="Gestor: #{dataVar.painelGestor}" />
+								<p:separator style=" height:10px;background-color:#e6e6ff"></p:separator>
+								<br></br>
+							</p:panelGrid>
+						</p:rowExpansion>
+					</p:dataTable>
+
+				</p:tab>
+				<!-- Fim Analise Diaria ______________________________________________________________  -->
+				<!-- Controle Git Dev_________________________________________________________________  -->
+				<p:tab title="Módulos Git - Diária" closable="true"
+					disabled="#{!usuarioBean.usuarioLogado.perfilDev}">
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableGitDev"
+								fileName="Git-Dev" />
+						</h:commandLink>
+
+						<p:commandButton update=":formTb:fr:dataTableGitDev:"
+							action="#{controleGitDevBean.listarInfos}" icon="ui-icon-refresh"
+							style="font-size:12px; float:right" title="Atualizar" />
+
+						<p:commandButton id="menuOpcoesModulosGit" value="Opções"
+							type="button" icon="ui-icon-triangle-1-s"
+							style="font-size:12px; float:right" rendered="true" />
+
+						<p:menu overlay="true" trigger="menuOpcoesModulosGit"
+							my="Right top" at="Right bottom" styleClass="add"
+							style="font-size:12px; float:right" rendered="true">
+
+
+							<p:menuitem title="Executar Sonar por sigla ou modulos"
+								oncomplete="PF('DialogoSelecionarTipoExSonarGit').show();"
+								value="Executar Sonar" icon="ui-icon-play" />
+							<p:menuitem title="Executar captura por sigla ou modulos"
+								oncomplete="PF('DialogoSelecionarTipoCapturaGit').show();"
+								value="Executar Captura" icon="ui-icon-database" />
+							<p:menuitem update=":formTb:fr:dataTableGitDev:"
+								action="#{controleGitDevBean.validarModulos}"
+								value="Validar Modulos" icon="ui-icon-pin" />
+							<p:menuitem style="color:#a5c854;"
+								action="#{controleGitDevBean.atualizarGit}" value="Git Pull"
+								icon="ui-icon-arrowstop-1-s" />
+							<p:menuitem style="color:#a5c854;"
+								oncomplete="PF('DialogoDownloadTodosModulosGit').show();"
+								value="Baixar pacotes" icon="ui-icon-arrowstop-1-s" />
+							<p:menuitem update=":formTb:fr:dataTableGitDev:"
+								title="Seleciona todos os painéis" value="Selecionar Todos"
+								action="#{controleGitDevBean.selecionarTodosModulos}"
+								icon="ui-icon-database" />
+							<p:menuitem update=":formTb:fr:dataTableGitDev:"
+								title="Retira seleção de  todos os painéis"
+								value="Desmarcar Todos"
+								action="#{controleGitDevBean.limparSelecaoTodosModulos}"
+								icon="ui-icon-database" />
+						</p:menu>
+
+					</p:fieldset>
+					<p:dataTable id="dataTableGitDev" rendered="true"
+						widgetVar="dataTableGitDev"
+						rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="7"
+						paginator="true" var="dataVar"
+						value="#{controleGitDevBean.listaControle}"
+						draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+						<f:facet name="header">
+							<p:outputLabel value="Total: #{controleGitDevBean.total}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTableGitDev" trigger="toggler">
+							</p:columnToggler>
+						</f:facet>
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações das Colunas -->
+
+
+						<p:column width="10%;" headerText="Alteração"
+							sortBy="#{dataVar.alteracao}" filterBy="#{dataVar.alteracao}">
+							<f:facet name="filter">
+								<p:selectOneButton onchange="PF('dataTableGitDev').filter()"
+									style="width:90%;">
+									<f:converter converterId="javax.faces.Boolean" />
+									<f:selectItem itemLabel="Todos" itemValue="" />
+									<f:selectItem itemLabel="Sim" itemValue="true" />
+									<f:selectItem itemLabel="Não" itemValue="false" />
+								</p:selectOneButton>
+							</f:facet>
+							<h:graphicImage styleClass="led"
+								value="/images/#{dataVar.alteracao}.png">
+							</h:graphicImage>
+						</p:column>
+
+						<p:column width="10%;" headerText="Acesso Git"
+							sortBy="#{dataVar.acessoGitOk}" filterBy="#{dataVar.acessoGitOk}">
+							<f:facet name="filter">
+								<p:selectOneButton onchange="PF('dataTableGitDev').filter()"
+									style="width:90%;">
+									<f:converter converterId="javax.faces.Boolean" />
+									<f:selectItem itemLabel="Todos" itemValue="" />
+									<f:selectItem itemLabel="OK" itemValue="true" />
+									<f:selectItem itemLabel="Sem Acesso" itemValue="false" />
+								</p:selectOneButton>
+							</f:facet>
+							<h:graphicImage styleClass="led"
+								value="/images/#{dataVar.acessoGitOk}.png">
+							</h:graphicImage>
+
+						</p:column>
+
+						<!-- <p:column headerText="Linhas" width="9%" sortBy="#{rowIndex}"> -->
+						<!-- #{rowIndex+1} -->
+						<!-- </p:column> -->
+						<p:column headerText="Id" sortBy="#{dataVar.codigo}"
+							filterBy="#{dataVar.codigo}">
+							<p:outputLabel value="#{dataVar.codigo}" />
+						</p:column>
+						<p:column headerText="Sigla" sortBy="#{dataVar.sigla}"
+							filterBy="#{dataVar.sigla}">
+							<p:outputLabel value="#{dataVar.sigla}" />
+						</p:column>
+						<p:column headerText="Sistema" sortBy="#{dataVar.nomeSistema}"
+							filterBy="#{dataVar.nomeSistema}">
+							<p:outputLabel value="#{dataVar.nomeSistema}" />
+						</p:column>
+						<p:column headerText="Pacote"
+							sortBy="#{dataVar.pacoteChaveNomePainelSonar}"
+							filterBy="#{dataVar.pacoteChaveNomePainelSonar}">
+							<p:outputLabel value="#{dataVar.pacoteChaveNomePainelSonar}" />
+						</p:column>
+						<p:column headerText="Data Commit" sortBy="#{dataVar.dataCommit}"
+							filterBy="#{dataVar.dataCommit}">
+							<p:outputLabel value="#{dataVar.dataCommit}">
+								<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Commit Ant"
+							sortBy="#{dataVar.dataCommitAnt}"
+							filterBy="#{dataVar.dataCommitAnt}">
+							<p:outputLabel value="#{dataVar.dataCommitAnt}">
+								<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Opções">
+							<!-- Rodar Sonar -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Executar Sonar"
+								actionListener="#{controleGitDevBean.selecionarObj}"
+								icon="ui-icon-play"
+								oncomplete="PF('confirmeDialogModulosGit').show();">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+							<!-- Capturar INFO Paineis via API -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Capturar"
+								actionListener="#{controleGitDevBean.selecionarObj}"
+								icon="ui-icon-info"
+								oncomplete="PF('confirmeDialogCapturaModulosGit').show();">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+						</p:column>
+
+						<p:column headerText="Selecionar" sortBy="#{dataVar.selecionado}">
+							<!-- Seleciona modulos para execução do sonar ou captura em grupo -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Seleciona modulo para execução do sonar ou captura em grupo"
+								actionListener="#{controleGitDevBean.selecionarModulo}"
+								icon="#{dataVar.selecionado}">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+						</p:column>
+
+						<p:column headerText="Ver" exportable="false">
+							<!-- Expandir infos -->
+							<p:rowToggler />
+						</p:column>
+						<!-- 					<p:column headerText="Config" width="12%" exportable="false"> -->
+						<!-- 						<p:commandButton icon="ui-icon-pencil" title="Editar" -->
+						<!-- 							onclick="PF('dlg2').show();"></p:commandButton> -->
+						<!-- 						<p:commandButton icon="ui-icon-trash" title="Excluir" -->
+						<!-- 							onclick="PF('dlg2').show();"></p:commandButton> -->
+						<!-- 					</p:column> -->
+
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações após expandir linha -->
+						<p:rowExpansion styleClass="rowEdit">
+
+							<p:panelGrid columns="1" columnClasses="label,value"
+								style="text-align:left;">
+								<p:outputLabel value="Data Sonar: #{dataVar.dataSonar}" />
+								<p:outputLabel value="Versão: #{dataVar.versao}" />
+								<p:outputLabel
+									value="Capturado: #{dataVar.capturado ? 'Sim' : 'Não'}" />
+								<p:outputLabel value="Author: #{dataVar.author}" />
+								<p:outputLabel value="Caminho: #{dataVar.caminho}" />
+								<p:outputLabel
+									value="Data Verificação #{dataVar.dataVerificacao}" />
+								<p:outputLabel value="Branch Repositorio: #{dataVar.branch}" />
+								<p:outputLabel value="URL GitLab : #{dataVar.url}" />
+								<p:outputLabel value="Erro GitPull: #{dataVar.erroGitPull}" />
+								<p:outputLabel value="Arquivo Carga: #{dataVar.nomeArquivo}" />
+								<p:outputLabel
+									value="Vinculado ao usuário: #{dataVar.usuarioGit}" />
+
+								<p:column>
+									<br></br>
+									<h:inputTextarea cols="100" rows="25" readonly="true"
+										title="Git Log:" value="Git Log... #{dataVar.descricaoLog}" />
+									<br></br>
+								</p:column>
+
+							</p:panelGrid>
+							<!-- <p:separator style="border: 2px solid #c1c7d9; border-radius: 100px/9px; background-color:  #d4d5e6; height:8px;"> </p:separator>  -->
+							<p:separator style=" height:10px;background-color:#e6e6ff"></p:separator>
+							<br></br>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:tab>
+				<!-- FIM Controle Git Dev _________________________________________________________________________________ -->
+				<!-- Controle RTC DEV_________________________________________________________________________________ -->
+				<p:tab title="Siglas RTC - Diárial" closable="true"
+					disabled="#{!usuarioBean.usuarioLogado.perfilDev}">
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableRtcDev"
+								fileName="Git-Dev" />
+						</h:commandLink>
+
+						<p:commandButton id="tipoCaptura"
+							value="#{controleRtcDevBean.tipoCaptura ? 'Mensal' : 'Diária'}"
+							style="font-size:13px; float:left "
+							actionListener="#{controleRtcDevBean.editaTipoCaptura}"
+							update="@form" icon="ui-icon-circle-check" />
+
+						<p:commandButton update=":formTb:fr:dataTableRtcDev:"
+							action="#{controleRtcDevBean.listarInfos}"
+							style="font-size:12px; float:right" icon="ui-icon-refresh"
+							title="Atualizar" rendered="true" />
+
+						<p:commandButton id="menuOpcoesRtc" value="Opções" type="button"
+							icon="ui-icon-triangle-1-s" style="font-size:12px; float:right"
+							rendered="true" />
+
+						<p:menu overlay="true" trigger="menuOpcoesRtc" my="Right top"
+							at="Right bottom" styleClass="add"
+							style="font-size:12px; float:right" rendered="true">
+
+
+							<p:menuitem value="Log RTC" style="color:#0400ff;"
+								action="#{controleRtcDevBean.gerarLogRTC}"
+								update=":formTb:fr:dataTableRtcDev:" icon="ui-icon-check"
+								disable="" />
+							<p:menuitem update=":formTb:fr:dataTableRtcDev:"
+								action="#{controleRtcDevBean.validarModulos}"
+								value="Criar Arquivos Sonar" icon="ui-icon-check" />
+
+							<p:menuitem update=":formTb:fr:dataTableRtcDev:"
+								action="#{controleRtcDevBean.validarChave}"
+								value="Validar Chave" icon="ui-icon-check" />
+
+							<p:menuitem update=":formTb:fr:dataTableRtcDev:"
+								oncomplete="PF('DialogoSelecionarTipoCapturaRTC').show();"
+								value="Executar Captura" icon="ui-icon-play" />
+
+							<p:menuitem update=":formTb:fr:dataTableRtcDev:"
+								oncomplete="PF('DialogoSelecionarTipoExSonarRTC').show();"
+								value="Executar Sonar" icon="ui-icon-play" />
+
+							<p:menuitem update=":formTb:fr:dataTableRtcDev:"
+								title="Seleciona todos os painéis" value="Selecionar Todos"
+								action="#{controleRtcDevBean.selecionarTodosModulos}"
+								icon="ui-icon-database" />
+							<p:menuitem update=":formTb:fr:dataTableRtcDev:"
+								title="Retira seleção de  todos os painéis"
+								value="Desmarcar Todos"
+								action="#{controleRtcDevBean.limparSelecaoTodosModulos}"
+								icon="ui-icon-database" />
+
+						</p:menu>
+
+					</p:fieldset>
+					<p:dataTable id="dataTableRtcDev" rendered="true"
+						widgetVar="dataTableRtcDev"
+						rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="7"
+						paginator="true" var="dataVar"
+						value="#{controleRtcDevBean.listaControle}"
+						draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+						<f:facet name="header">
+							<p:outputLabel value="Total: #{controleRtcDevBean.total}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTableRtcDev" trigger="toggler">
+							</p:columnToggler>
+						</f:facet>
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações das Colunas -->
+
+						<p:column headerText="Alteração" sortBy="#{dataVar.alteracao}"
+							filterBy="#{dataVar.alteracao}">
+							<h:graphicImage styleClass="led"
+								value="/images/#{dataVar.alteracao}.png">
+							</h:graphicImage>
+						</p:column>
+
+
+						<p:column headerText="Id" sortBy="#{dataVar.codigo}"
+							filterBy="#{dataVar.codigo}">
+							<p:outputLabel value="#{dataVar.codigo}" />
+						</p:column>
+						<p:column headerText="Sigla" sortBy="#{dataVar.sigla}"
+							filterBy="#{dataVar.sigla}">
+							<p:outputLabel value="#{dataVar.sigla}" />
+						</p:column>
+						<p:column headerText="Sistema" sortBy="#{dataVar.nomeSistema}"
+							filterBy="#{dataVar.nomeSistema}">
+							<p:outputLabel value="#{dataVar.nomeSistema}" />
+						</p:column>
+
+
+						<p:column headerText="Data Commit" sortBy="#{dataVar.dataCommit}"
+							filterBy="#{dataVar.dataCommit}">
+							<p:outputLabel value="#{dataVar.dataCommit}">
+								<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Commit Ant"
+							sortBy="#{dataVar.dataCommitAnt}"
+							filterBy="#{dataVar.dataCommitAnt}">
+							<p:outputLabel value="#{dataVar.dataCommitAnt}">
+								<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Opções">
+							<!-- Rodar Sonar -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Executar Sonar"
+								actionListener="#{controleRtcDevBean.selecionarObj}"
+								icon="ui-icon-play" oncomplete="PF('confirmeDialogRTC').show();">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+
+							<!-- Capturar INFO Paineis via API -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Capturar"
+								actionListener="#{controleRtcDevBean.selecionarObj}"
+								icon="ui-icon-info"
+								oncomplete="PF('confirmeDialogCapturaRTC').show();">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+
+
+
+						</p:column>
+						<p:column headerText="Selecionar" sortBy="#{dataVar.selecionado}"
+							width="10%">
+							<!-- Seleciona modulos para execução do sonar ou captura em grupo -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Seleciona modulo para execução do sonar ou captura em grupo"
+								actionListener="#{controleRtcDevBean.selecionarModulo}"
+								icon="#{dataVar.selecionado}">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+						</p:column>
+						<p:column headerText="Ver" width="4%" exportable="false">
+							<!-- Expandir infos -->
+							<p:rowToggler />
+						</p:column>
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações após expandir linha -->
+						<p:rowExpansion styleClass="rowEdit">
+
+							<p:panelGrid columns="1" columnClasses="label,value"
+								style="text-align:left;">
+
+								<p:outputLabel value="Data Sonar: #{dataVar.dataSonar}">
+									<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+										locale="pt_BR" />
+								</p:outputLabel>
+								<p:outputLabel value="Versão: #{dataVar.versao}">
+									<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+										locale="pt_BR" />
+								</p:outputLabel>
+								<p:outputLabel value="Chave Sonar: #{dataVar.chave}" />
+								<p:outputLabel value="Caminho: #{dataVar.caminho}" />
+								<p:outputLabel
+									value="Data Verificação #{dataVar.dataVerificacao}" />
+								<p:outputLabel value="Arquivo Carga: #{dataVar.nomeArquivo}" />
+								<p:column>
+									<br></br>
+									<h:inputTextarea cols="100" rows="25" readonly="true"
+										title="Git Log:" value="RTC Log... #{dataVar.descricaoLog}" />
+									<br></br>
+								</p:column>
+
+							</p:panelGrid>
+							<!-- <p:separator style="border: 2px solid #c1c7d9; border-radius: 100px/9px; background-color:  #d4d5e6; height:8px;"> </p:separator>  -->
+							<p:separator style=" height:10px;background-color:#e6e6ff"></p:separator>
+							<br></br>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:tab>
+				<!-- FIM Controle RTC Dev _________________________________________________________________________________ -->
+			</p:tabView>
+		</p:fieldset>
+
+	</h:form>
+</ui:composition>

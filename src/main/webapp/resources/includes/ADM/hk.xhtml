@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<h:form id="formTb">
+
+		<p:dialog widgetVar="statusDialog" closable="false" draggable="false">
+			<p:graphicImage value="/images/loading6.gif" />
+
+		</p:dialog>
+
+		<!-- Caixas de dialogo do Git -->
+		<!-- Dialogo Executar Sonar -->
+		<p:dialog widgetVar="confirmeDialogModulosGit"
+			header="Deseja executar modulo : #{controleGitHKBean.obj.pacote}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('confirmeDialogModulosGit').hide();"
+					action="#{controleGitHKBean.executarSonar}"
+					style="color:#8c1515; font-size:15px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+				<p:commandButton value="NÃO"
+					onclick="PF('confirmeDialogModulosGit').hide();"
+					style="color:blue;font-size:15px;" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+			</h:panelGrid>
+		</p:dialog>
+		<!-- Dialogo Capturar -->
+		<p:dialog widgetVar="confirmeDialogCapturaModulosGit"
+			header="Deseja capturar modulo : #{controleGitHKBean.obj.pacote}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('confirmeDialogCapturaModulosGit').hide();"
+					action="#{controleGitHKBean.capturar}"
+					style="color:#8c1515; font-size:15px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+				<p:commandButton value="NÃO"
+					onclick="PF('confirmeDialogCapturaModulosGit').hide();"
+					style="color:blue;font-size:15px;" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+			</h:panelGrid>
+		</p:dialog>
+
+
+		<p:fieldset legend="Ambiente de Homologação"
+			style="margin-bottom:20px;font-size:12px;" toggleable="true"
+			toggleSpeed="500">
+			<!-- _________________________________________________________________________________________________________________________________ -->
+			<!-- Tabelas com informações RFC/Inspeção  -->
+
+			<p:tabView id="fr" style="font-size:13px;">
+
+				<!-- Analise Homologacao_________________________________________________________   -->
+				<p:tab title="Análise Homologacao (Homologacao-HK)" closable="true"
+					disabled="false">
+
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;">
+						<p:commandButton
+							style="font-size:12px; float:right; color:#5c6766;"
+							title="Busca atualizações no banco de dados" styleClass="add"
+							action="#{analise_Homologacao_Bean.listaInfos}"
+							update=":formTb:fr:dataTablePocUra" icon="ui-icon-refresh" />
+
+						<p:commandButton
+							style="font-size:12px; float:right; color:#5c6766;"
+							title="Calcula a nota dos projetos" styleClass="add"
+							action="#{analise_Homologacao_Bean.calcNotaInfosAnt}"
+							update=":formTb:fr:dataTablePocUra" icon="ui-icon-pin" />
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTablePocUra"
+								fileName="AnaliseHomologacao-HK" />
+						</h:commandLink>
+
+					</p:fieldset>
+					<p:dataTable id="dataTablePocUra" rendered="true"
+						rowsPerPageTemplate="2,7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="20"
+						paginator="true" var="dataVar"
+						value="#{analise_Homologacao_Bean.listaAnalise}"
+						draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+
+						<f:facet name="header">
+
+							<p:outputLabel value="TOTAL: #{analise_Homologacao_Bean.total}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTablePocUra" trigger="toggler">
+							</p:columnToggler>
+
+							<!-- Animação de loading -->
+							<p:ajaxStatus onstart="PF('statusDialog').show()"
+								onsuccess="PF('statusDialog').hide()" />
+						</f:facet>
+
+						<p:column headerText="ID" width="9%" sortBy="#{dataVar.id}"
+							filterBy="#{dataVar.id}">
+							<p:outputLabel value="#{dataVar.id}" />
+						</p:column>
+						<p:column headerText="GESTOR" width="10%"
+							sortBy="#{dataVar.painelGestor}"
+							filterBy="#{dataVar.painelGestor}">
+							<p:outputLabel value="#{dataVar.painelGestor}" />
+						</p:column>
+						<p:column headerText="SIGLA" width="5%" sortBy="#{dataVar.sigla}"
+							filterBy="#{dataVar.sigla}">
+							<p:outputLabel value="#{dataVar.sigla}" />
+						</p:column>
+						<p:column headerText="Sistema" width="20%"
+							sortBy="#{dataVar.nomeProjeto}" filterBy="#{dataVar.nomeProjeto}">
+							<p:outputLabel value="#{dataVar.nomeProjeto}" />
+						</p:column>
+						<p:column headerText="Data Captura" width="7%"
+							sortBy="#{dataVar.dataCaptura}" filterBy="#{dataVar.dataCaptura}"
+							id="dataCapturaUra">
+							<p:outputLabel value="#{dataVar.dataCaptura}">
+								<f:convertDateTime for="dataCapturaUra" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Data Sonar" width="7%"
+							sortBy="#{dataVar.dataSonar}" filterBy="#{dataVar.dataSonar}"
+							id="dataSonarUra">
+							<p:outputLabel value="#{dataVar.dataSonar}">
+								<f:convertDateTime for="dataSonarUra" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="COMMIT" width="7%" id="commitURA"
+							sortBy="#{dataVar.dataCommit}" filterBy="#{dataVar.dataCommit}">
+							<p:outputLabel value="#{dataVar.dataCommit}">
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Nota" width="7%" id="Nota"
+							sortBy="#{dataVar.notaProjeto}" filterBy="#{dataVar.notaProjeto}">
+							<p:outputLabel value="#{dataVar.notaProjeto}">
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Linhas de código" width="10%"
+							sortBy="#{dataVar.linhaCodigo}" filterBy="#{dataVar.linhaCodigo}">
+							<p:outputLabel value="#{dataVar.linhaCodigo}" />
+						</p:column>
+
+					</p:dataTable>
+
+				</p:tab>
+
+				<!-- Controle Git HK_________________________________________________________________________________ -->
+				<p:tab title="Git (hk)" closable="true"
+					disabled="#{!usuarioBean.usuarioLogado.perfilHk}">
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableGit"
+								fileName="Git-HK" />
+						</h:commandLink>
+						<p:commandButton style="font-size:12px; float:right"
+							rendered="true" update=":formTb:fr:dataTableGit:"
+							styleClass="add" action="#{controleGitHKBean.listarInfos}"
+							icon=" ui-icon-refresh" title="Atualizar" />
+						<p:commandButton id="menuOpcoesModulosGit" value="Opções"
+							type="button" icon="ui-icon-caret-1-s"
+							style="font-size:12px; float:right" rendered="true" />
+						<p:menu overlay="true" trigger="menuOpcoesModulosGit"
+							my="Right top" at="Right bottom" styleClass="add"
+							style="font-size:12px; float:right" rendered="true">
+							<p:menuitem style="font-size:12px; float:right; color:#5c6766;"
+								styleClass="add" action="#{controleGitHKBean.enviarEmail}"
+								value="Enviar Email" icon="ui-icon-mail-closed" />
+							<p:menuitem style="font-size:12px; float:right;" styleClass="add"
+								action="#{controleGitHKBean.atualizarGit}" value="Git Pull"
+								icon=" ui-icon-arrowstop-1-s" />
+							<p:menuitem style="font-size:12px; float:right;" styleClass="add"
+								action="#{controleGitHKBean.baixarPacotes}"
+								value="Baixar pacotes" icon=" ui-icon-arrowstop-1-s" />
+							<p:menuitem style="font-size:12px; float:right;" styleClass="add"
+								action="#{controleGitHKBean.atualizaGitExecutaSonar}"
+								value="Exec Git Pull e Sonar"
+								icon=" ui-icon-arrowstop-1-s" />
+							<p:menuitem style="font-size:12px; float:right" rendered="true"
+								update=":formTb:fr:dataTableGit:" styleClass="add"
+								action="#{controleGitHKBean.validarModulos}"
+								value="Validar Modulos" icon=" ui-icon-refresh" />
+
+						</p:menu>
+
+
+					</p:fieldset>
+					<p:dataTable id="dataTableGit" rendered="true"
+						rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="7"
+						paginator="true" var="dataVar"
+						value="#{controleGitHKBean.listaControle}" draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+						<f:facet name="header">
+							<p:outputLabel value="TOTAL: #{controleGitHKBean.total}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTableGit" trigger="toggler">
+							</p:columnToggler>
+						</f:facet>
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações das Colunas -->
+						<p:column width="12%;" headerText="Alteração"
+							sortBy="#{dataVar.alteracao}" filterBy="#{dataVar.alteracao}">
+							<h:graphicImage styleClass="led"
+								value="/images/#{dataVar.alteracao}.png">
+							</h:graphicImage>
+						</p:column>
+
+						<!-- <p:column headerText="Linhas" width="9%" sortBy="#{rowIndex}"> -->
+						<!-- #{rowIndex+1} -->
+						<!-- </p:column> -->
+						<p:column headerText="ID" width="5%" sortBy="#{dataVar.codigo}"
+							filterBy="#{dataVar.codigo}">
+							<p:outputLabel value="#{dataVar.codigo}" />
+						</p:column>
+						<p:column headerText="SIGLA" width="10%" sortBy="#{dataVar.sigla}"
+							filterBy="#{dataVar.sigla}">
+							<p:outputLabel value="#{dataVar.sigla}" />
+						</p:column>
+						<p:column headerText="Sistema" width="30%"
+							sortBy="#{dataVar.nomeSistema}" filterBy="#{dataVar.nomeSistema}">
+							<p:outputLabel value="#{dataVar.nomeSistema}" />
+						</p:column>
+
+						<p:column headerText="Pacote" width="30%"
+							sortBy="#{dataVar.pacote}" filterBy="#{dataVar.pacote}">
+							<p:outputLabel value="#{dataVar.pacote}" />
+						</p:column>
+
+						<p:column headerText="Data Commit" width="10%"
+							sortBy="#{dataVar.dataCommit}" filterBy="#{dataVar.dataCommit}">
+							<p:outputLabel value="#{dataVar.dataCommit}">
+								<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Commit Ant" width="10%"
+							sortBy="#{dataVar.dataCommitAnt}"
+							filterBy="#{dataVar.dataCommitAnt}">
+							<p:outputLabel value="#{dataVar.dataCommitAnt}">
+								<f:convertDateTime for="cadastro" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+						<p:column headerText="Opções" width="10%">
+							<!-- Rodar Sonar -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Executar Sonar"
+								actionListener="#{controleGitHKBean.selecionarObj}"
+								icon="ui-icon-play"
+								oncomplete="PF('confirmeDialogModulosGit').show();">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+							<!-- Capturar INFO Paineis via API -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Capturar"
+								actionListener="#{controleGitHKBean.selecionarObj}"
+								icon="ui-icon-info"
+								oncomplete="PF('confirmeDialogCapturaModulosGit').show();">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+						</p:column>
+
+						<p:column headerText="Ver" width="4%" exportable="false">
+							<!-- Expandir infos -->
+							<p:rowToggler />
+						</p:column>
+
+						<p:rowExpansion styleClass="rowEdit">
+
+							<p:panelGrid columns="1" columnClasses="label,value"
+								style="text-align:left;">
+								<p:outputLabel value="Author: #{dataVar.author}" />
+								<p:outputLabel value="Caminho: #{dataVar.caminho}" />
+								<p:outputLabel
+									value="Data Verificação #{dataVar.dataVerificacao}" />
+								<p:outputLabel value="Arquivo Carga: #{dataVar.nomeArquivo}" />
+								<p:outputLabel value="URL #{dataVar.url}" />
+								<p:outputLabel value="Branch #{dataVar.branch}" />
+								<p:column>
+									<br></br>
+									<h:inputTextarea cols="100" rows="25" readonly="true"
+										title="Git Log:" value="Git Log... #{dataVar.descricaoLog}" />
+									<br></br>
+								</p:column>
+							</p:panelGrid>
+							<!-- <p:separator style="border: 2px solid #c1c7d9; border-radius: 100px/9px; background-color:  #d4d5e6; height:8px;"> </p:separator>  -->
+							<p:separator style=" height:10px;background-color:#e6e6ff"></p:separator>
+							<br></br>
+						</p:rowExpansion>
+					</p:dataTable>
+					<p:dialog widgetVar="finishedGitPull" id="idfinishedGitPull">
+						<h:form>
+							<h:outputText value="Siglas atualizadas" />
+						</h:form>
+					</p:dialog>
+				</p:tab>
+				<!-- FIM Controle Git HK _________________________________________________________________________________ -->
+
+
+			</p:tabView>
+
+		</p:fieldset>
+
+	</h:form>
+</ui:composition>

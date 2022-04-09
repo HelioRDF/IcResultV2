@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+	<h:form id="formFiltro">
+		<!-- Atualizar table -->
+
+		<br></br>
+
+		<p:fieldset legend="Carga Excel/SQL-Server" toggleable="true"
+			toggleSpeed="500" style="font-size:11px;" collapsed="false">
+
+
+
+			<p:outputLabel value="Carga Módulos Git (Mensal):"
+				style=" font-size: 12px;text-align:left;margin: 3px 10px 0px 5px; width:90%; " />
+			<p:fileUpload cancelLabel="Cancelar" uploadLabel="Carregar"
+				disabled="#{!usuarioBean.usuarioLogado.perfilDev}" label="Abrir"
+				value="#{controleGitDevMensalBean.path}"
+				invalidFileMessage="Arquivo inválido, utilizar formato .xls"
+				fileUploadListener="#{fileUploadView.handleFileUploadGitMensal}"
+				mode="advanced" dragDropSupport="true"
+				style="margin:5px 5px; font-size: 12px; width:95%;"
+				update="formFiltro" sizeLimit="900000" allowTypes="/(\.|\/)(xls)$/" />
+
+			<p:commandButton style="font-size:12px;color:#11843a;" ajax="false"
+				value="Baixar Carga Exemplo Git"
+				icon="ui-icon-transferthick-e-w">
+				<p:fileDownload value="#{controleGitDevMensalBean.exemploModulosGit}" />
+			</p:commandButton>
+
+			<p:separator></p:separator>
+
+
+			<p:outputLabel value="Carga RTC (Mensal):"
+				style=" font-size: 12px;text-align:left;margin: 3px 10px 0px 5px; width:90%; " />
+			<p:fileUpload cancelLabel="Cancelar" uploadLabel="Carregar"
+				disabled="#{!usuarioBean.usuarioLogado.perfilDev}" label="Abrir"
+				invalidFileMessage="Arquivo inválido, utilizar formato .xls"
+				fileUploadListener="#{fileUploadView.handleFileUploadRtcDev}"
+				mode="advanced" dragDropSupport="true"
+				style="margin:5px 5px; font-size: 12px; width:95%;"
+				update="formFiltro" sizeLimit="900000" allowTypes="/(\.|\/)(xls)$/" />
+
+			<p:commandButton style="font-size:12px;color:#11843a;" ajax="false"
+				value="Baixar Carga Exemplo RTC" icon="ui-icon-transferthick-e-w">
+				<p:fileDownload value="#{controleRtcDevBean.exemploSiglasRTC}" />
+			</p:commandButton>
+
+			<p:separator></p:separator>
+
+			<p:outputLabel value="Carga Siglas Git(Mensal):"
+				style=" font-size: 12px;text-align:left;margin: 3px 10px 0px 5px; width:90%; " />
+			<p:fileUpload cancelLabel="Cancelar" uploadLabel="Carregar"
+				disabled="#{!usuarioBean.usuarioLogado.perfilDev}" label="Abrir"
+				invalidFileMessage="Arquivo inválido, utilizar formato .xls"
+				fileUploadListener="#{fileUploadView.handleFileUploadSiglasGitDev}"
+				mode="advanced" dragDropSupport="true"
+				style="margin:5px 5px; font-size: 12px; width:95%;"
+				update="formFiltro" sizeLimit="900000" allowTypes="/(\.|\/)(xls)$/" />
+
+			<p:commandButton style="font-size:12px;color:#11843a;" ajax="false"
+				value="Baixar Carga Exemplo Siglas Git" icon="ui-icon-transferthick-e-w">
+				<p:fileDownload value="#{siglasGitBean.exemploSiglasGit}" />
+			</p:commandButton>
+
+
+			<p:messages id="msgRFC" closable="true" />
+		</p:fieldset>
+
+
+
+
+	</h:form>
+</ui:composition>

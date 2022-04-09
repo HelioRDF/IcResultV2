@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	template="/resources/templates/templateEditar.xhtml">
+	<ui:define name="insertCenter">
+
+		<!-- Menu Publico -->
+		<ui:include src="/resources/includes/menuPublico.xhtml"></ui:include>
+		<span style="margin: 100px;"></span>
+		<div id="login-dialog">
+			<p:messages id="msg" closable="true" style="width: 120%;" />
+			<h:form id="frm">
+				<h:panelGrid columns="1" styleClass="grid-login">
+					<h2>Recuperar Senha</h2>
+					<p:separator />
+					<h:panelGrid columns="2">
+						<p:outputLabel style="margin-bottom:15px;" />
+						<p:outputLabel />
+						<p:outputLabel style="padding-top:15px;font-size:13px;" value="Digite seu E-Mail:"
+							for="usuario" />
+						<p:inputText id="usuario" size="23"
+							style="font-size:14px; width:200px;"
+							value="#{loginBean.usuario.email}" />
+					</h:panelGrid>
+					<p:separator />
+					<p:commandButton update=":msg:"
+						actionListener="#{loginBean.emailParaRecuperacaoSenha}" value="Enviar Nova Senha"
+						icon="ui-icon-circle-check"
+						style="margin: 0px 5px 0px 40px; width:70%; font-size:15px" />
+				</h:panelGrid>
+				<h:link outcome="login" >Página de Login
+				</h:link>
+			</h:form>
+		</div>
+		<div id="rodape"></div>
+	</ui:define>
+</ui:composition>

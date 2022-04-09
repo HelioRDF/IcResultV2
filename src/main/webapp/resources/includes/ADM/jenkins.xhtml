@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+	<h:form id="formTb">
+
+		<p:messages id="messages" showDetail="false" closable="true">
+			<p:autoUpdate />
+		</p:messages>
+		<p:dialog widgetVar="statusDialog" closable="false" draggable="false">
+			<p:graphicImage value="/images/loading6.gif" />
+		</p:dialog>
+
+		<!-- Caixas Dialogo Snapshot -->
+		<!-- Dialogo Executar Captura -->
+		<p:dialog widgetVar="DialogoConfirmarCapturaGeral"
+			header="Deseja capturar todos os modulos selecionados?">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('DialogoConfirmarCapturaGeral').hide();"
+					style="color:#8c1515; font-size:15px;" icon="ui-icon-refresh"
+					actionListener="#{devOpsJenkinsBean.executarCapturaModulosSelecionados}">
+					<f:attribute name="tabela"
+						value="#{devOpsJenkinsBean.listaSnapshot}" />
+				</p:commandButton>
+
+				<p:commandButton value="NÃO" style="color:blue;font-size:15px;"
+					oncomplete="PF('DialogoConfirmarCapturaGeral').hide();"
+					icon="ui-icon-check" />
+
+				<h:outputLabel
+					value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+			</h:panelGrid>
+		</p:dialog>
+
+		<!-- Dialogo Capturar Individualmente Snapshot-->
+		<p:dialog widgetVar="confirmeDialogCapturaSnapshot"
+			header="Deseja capturar modulo : #{devOpsJenkinsBean.obj.chave}">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('confirmeDialogCapturaSnapshot').hide();"
+					action="#{devOpsJenkinsBean.capturar}"
+					style="color:#8c1515; font-size:15px;"
+					styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+
+				<p:commandButton value="NÃO"
+					onclick="PF('confirmeDialogCapturaSnapshot').hide();"
+					style="color:blue;font-size:15px;" styleClass="ui-confirmdialog-no"
+					icon="ui-icon-close" />
+			</h:panelGrid>
+			<h:outputLabel
+				value="link SONAR : #{configBean.configuracaoSONARSalva.url}" />
+		</p:dialog>
+		<!-- Caixa de Dialogo Analise Mensal -->
+		<!-- Dialogo Confirma Exclusao de Analise -->
+		<p:dialog widgetVar="DialogoConfirmarExclusaoAnaliseMensal"
+			header="Deseja (EXCLUIR) todas as analises selecionadas?">
+
+			<h:panelGrid columns="2" style="margin:auto;">
+				<p:commandButton value="SIM"
+					oncomplete="PF('DialogoConfirmarExclusaoAnaliseMensal').hide();"
+					style="color:#8c1515; font-size:15px;" icon="ui-icon-refresh"
+					actionListener="#{analise_Dev_Jenkins_Bean.excluirAnalises}">
+					<f:attribute name="tabela"
+						value="#{analise_Dev_Jenkins_Bean.listaAnalise}" />
+				</p:commandButton>
+
+				<p:commandButton value="NÃO" style="color:blue;font-size:15px;"
+					oncomplete="PF('DialogoConfirmarExclusaoAnaliseMensal').hide();"
+					icon="ui-icon-check" />
+
+			</h:panelGrid>
+		</p:dialog>
+
+		<p:fieldset legend="Inspeção Pipeline Jenkins"
+			style="margin-bottom:20px;font-size:12px;" toggleable="true"
+			toggleSpeed="500">
+
+			<!-- _________________________________________________________________________________________________________________________________ -->
+			<!-- Tabelas com informações Analise Dev  -->
+
+			<p:tabView id="fr" style="font-size:13px;">
+
+
+				<!-- Analise Dev ______________________________________________________________  -->
+				<p:tab title="Pipeline Jenkins" closable="true" disabled="false">
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+						<p:commandButton style="font-size:12px; float:right"
+							id="btAtualizarDevMensal" styleClass="add"
+							action="#{analise_Dev_Jenkins_Bean.listarInfos}"
+							update=":formTb:fr:dataTableAnaliseDEV" icon="ui-icon-refresh"
+							title="Atualizar" />
+						<p:commandButton id="menuOpcoesAnaliseMensal" value="Opções"
+							type="button" icon="ui-icon-triangle-1-s"
+							style="font-size:12px; float:right" rendered="true" />
+
+						<p:menu overlay="true" trigger="menuOpcoesAnaliseMensal"
+							my="Right top" at="Right bottom" styleClass="add"
+							style="font-size:12px; float:right" rendered="true">
+
+							<p:menuitem style="font-size:12px; float:right; color:#5c6766;"
+								title="Insere Data Commit e calcula Tipo, Coeficiente e Nota"
+								styleClass="add" update=":formTb:fr:dataTableAnaliseDEV"
+								action="#{analise_Dev_Jenkins_Bean.calculaResultados}"
+								value="Calcular Resultados" icon="ui-icon-pin-s" />
+
+							<p:menuitem style="font-size:12px; float:right" styleClass="add"
+								oncomplete="PF('DialogoConfirmarExclusaoAnaliseMensal').show()"
+								value="Excluir Analises" rendered="true"
+								update=":formTb:fr:dataTableAnaliseDEV"
+								icon="ui-icon-closethick" />
+						</p:menu>
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableAnaliseDEV"
+								fileName="Analise-PIPELINE" />
+						</h:commandLink>
+
+					</p:fieldset>
+					<p:dataTable id="dataTableAnaliseDEV"
+						widgetVar="dataTableAnaliseDEV" rendered="true"
+						rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="7"
+						paginator="true" var="dataVar"
+						value="#{analise_Dev_Jenkins_Bean.listaAnalise}"
+						draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+
+						<f:facet name="header">
+							<p:ajaxStatus onstart="PF('statusDialog').show()"
+								onsuccess="PF('statusDialog').hide()" />
+
+							<p:outputLabel value="Total: #{analise_Dev_Jenkins_Bean.total}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTableAnaliseDEV"
+								trigger="toggler">
+							</p:columnToggler>
+						</f:facet>
+
+
+
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações das Colunas -->
+
+						<!-- <p:column headerText="Linhas" width="9%" sortBy="#{rowIndex}"> -->
+						<!-- #{rowIndex+1} -->
+						<!-- </p:column> -->
+						<p:column headerText="Id" width="9%" sortBy="#{dataVar.id}"
+							filterBy="#{dataVar.id}">
+							<p:outputLabel value="#{dataVar.id}" />
+						</p:column>
+
+						<p:column headerText="Sigla" width="10%" sortBy="#{dataVar.sigla}"
+							style="color:#409a4c;" filterBy="#{dataVar.sigla}">
+							<p:outputLabel value="#{dataVar.sigla}" />
+						</p:column>
+
+						<p:column headerText="Sistema" width="35%"
+							sortBy="#{dataVar.nomeProjeto}" filterBy="#{dataVar.nomeProjeto}">
+							<p:outputLabel value="#{dataVar.nomeProjeto}" />
+						</p:column>
+
+						<p:column headerText="Linhas.Cód" width="12%"
+							sortBy="#{dataVar.linhaCodigo}" filterBy="#{dataVar.linhaCodigo}">
+							<p:outputLabel value="#{dataVar.linhaCodigo}" />
+						</p:column>
+
+						<p:column headerText="Blockers" width="10%" style="color:#a71717;"
+							sortBy="#{dataVar.issuesMuitoAlta}"
+							filterBy="#{dataVar.issuesMuitoAlta}">
+							<p:outputLabel value="#{dataVar.issuesMuitoAlta}" />
+						</p:column>
+
+
+						<p:column headerText="Nota" width="10%" style="color:#1155ff;"
+							sortBy="#{dataVar.notaProjeto}" filterBy="#{dataVar.notaProjeto}">
+							<p:outputLabel value="#{dataVar.notaProjeto}%" />
+						</p:column>
+
+						<p:column headerText="Data.Cap" width="12%" id="cap"
+							sortBy="#{dataVar.dataCaptura}" filterBy="#{dataVar.dataCaptura}">
+							<p:outputLabel value="#{dataVar.dataCaptura}">
+								<f:convertDateTime for="cap" pattern="yyyy-MM-dd" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Commit" width="11%" id="commitD"
+							sortBy="#{dataVar.dataCommit}" filterBy="#{dataVar.dataCommit}">
+							<p:outputLabel value="#{dataVar.dataCommit}">
+								<f:convertDateTime for="commitD" pattern="yyyy-MM-dd"
+									locale="pt_BR" />
+							</p:outputLabel>
+						</p:column>
+
+						<p:column headerText="Selecionar" width="10%"
+							sortBy="#{dataVar.selecionado}">
+							<!-- Seleciona modulos para execução do sonar ou captura em grupo -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Seleciona analise para exclusão"
+								actionListener="#{analise_Dev_Jenkins_Bean.selecionarAnalise}"
+								icon="#{dataVar.selecionado}">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+						</p:column>
+
+
+						<p:column headerText="Ver" width="4%" exportable="false">
+							<!-- Expandir infos -->
+							<p:rowToggler />
+						</p:column>
+
+
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações após expandir linha -->
+						<p:rowExpansion styleClass="rowEdit">
+							<p:panelGrid columns="1" columnClasses="label,value"
+								style="text-align:left;">
+
+								<p:outputLabel value="Gestor: #{dataVar.painelGestor}" />
+								<p:outputLabel value="Coeficiente: #{dataVar.coeficiente}" />
+								<p:outputLabel
+									value="Linhas de Código Anterior: #{dataVar.linhaCodigoAnt}" />
+								<p:outputLabel
+									value="Debito Técnico: #{dataVar.debitoTecnicoMinutos} (Minutos)" />
+								<p:outputLabel
+									value="Gestor de nivel 1: #{dataVar.gestorNivel1}" />
+								<!-- <p:separator style="border: 2px solid #c1c7d9; border-radius: 100px/9px; background-color:  #d4d5e6; height:8px;"> </p:separator>  -->
+								<p:separator style=" height:10px;background-color:#e6e6ff"></p:separator>
+								<br></br>
+							</p:panelGrid>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:tab>
+				<!-- DevOps_________________________________________________________________________________ -->
+				<p:tab title="Jenkins" closable="true"
+					disabled="#{!usuarioBean.usuarioLogado.perfilDev}">
+					<p:fieldset style="margin:4px 1px; margin-top:3px; padding:8px;  ">
+
+
+						<h:commandLink style="float:left; margin-right:5px;">
+							<h:graphicImage value="/images/excel.png" width="30" />
+							<p:dataExporter type="xls" target="dataTableSnapshotDev"
+								fileName="Snapshot-Dev" />
+						</h:commandLink>
+
+						<p:commandButton action="#{devOpsJenkinsBean.listarInfosSnapshot}"
+							update=":formTb:fr:dataTableSnapshotDev:" icon="ui-icon-refresh"
+							title="Atualizar" style="font-size:12px; float:right"
+							rendered="true" />
+
+						<p:commandButton id="menuOpcoesSnapshot" value="Opções"
+							type="button" icon="ui-icon-triangle-1-s"
+							style="font-size:12px; float:right" rendered="true" />
+
+						<p:menu overlay="true" trigger="menuOpcoesSnapshot" my="Right top"
+							at="Right bottom" styleClass="add"
+							style="font-size:12px; float:right" rendered="true">
+
+							<p:menuitem update=":formTb:fr:dataTableSnapshotDev:"
+								title="Executar captura de todos os modulos selecionados"
+								oncomplete="PF('DialogoConfirmarCapturaGeral').show();"
+								value="Executar Captura" icon="ui-icon-play" />
+							<p:menuitem update=":formTb:fr:dataTableSnapshotDev:"
+								title="Seleciona todos os painéis" value="Selecionar Todos"
+								action="#{devOpsJenkinsBean.selecionarTodosModulos}"
+								icon="ui-icon-database" />
+							<p:menuitem update=":formTb:fr:dataTableSnapshotDev:"
+								title="Retira seleção de  todos os painéis"
+								value="Desmarcar Todos"
+								action="#{devOpsJenkinsBean.limparSelecaoTodosModulos}"
+								icon="ui-icon-database" />
+							<p:menuitem update=":formTb:fr:dataTableSnapshotDev:"
+								title="Seleciona todos os painéis filtrados"
+								value="Selecionar Todos C/ filtro"
+								action="#{devOpsJenkinsBean.selecionarTodosModulosFiltrados}"
+								icon="ui-icon-database" />
+
+						</p:menu>
+					</p:fieldset>
+					<p:dataTable id="dataTableSnapshotDev" rendered="true"
+						widgetVar="dataTableSnapshotDev"
+						rowsPerPageTemplate="7,12,20,30,50,100" rowIndexVar="rowIndex"
+						emptyMessage="Nenhum Registro encontrado" rows="7"
+						paginator="true" var="dataVar"
+						value="#{devOpsJenkinsBean.listaSnapshot}"
+						filteredValue="#{devOpsJenkinsBean.listaSnapshotFiltrada}"
+						draggableColumns="true"
+						style=" text-align:center;font-size: 12px;"
+						paginatorPosition="top">
+						<f:facet name="header">
+							<p:outputLabel value="Total: #{devOpsJenkinsBean.totalSnapshot}" />
+							<p:commandButton id="toggler" type="button" value="Colunas"
+								style="float:right" icon="ui-icon-calculator" />
+							<p:columnToggler datasource="dataTableSnapshotDev"
+								trigger="toggler">
+							</p:columnToggler>
+						</f:facet>
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações das Colunas -->
+						<p:column headerText="Id" width="7%" sortBy="#{dataVar.id}"
+							filterBy="#{dataVar.id}">
+							<p:outputLabel value="#{dataVar.id}" />
+						</p:column>
+						<p:column headerText="Sigla" width="7%" sortBy="#{dataVar.sigla}"
+							filterBy="#{dataVar.sigla}">
+							<p:outputLabel value="#{dataVar.sigla}" />
+						</p:column>
+						<p:column headerText="Sistema" width="30%"
+							sortBy="#{dataVar.nome_Projeto}"
+							filterBy="#{dataVar.nome_Projeto}">
+							<p:outputLabel value="#{dataVar.nome_Projeto}" />
+						</p:column>
+
+						<p:column headerText="Opções" width="10%">
+							<!-- Capturar INFO Paineis via API -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Capturar"
+								actionListener="#{devOpsJenkinsBean.selecionarObj}"
+								icon="ui-icon-info"
+								oncomplete="PF('confirmeDialogCapturaSnapshot').show();">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+						</p:column>
+						<p:column headerText="Selecionar" width="10%"
+							sortBy="#{dataVar.selecionado}">
+							<!-- Seleciona modulos para execução do sonar ou captura em grupo -->
+							<p:commandButton style="margin:auto;" update="@form"
+								title="Seleciona modulo para execução do sonar ou captura em grupo"
+								actionListener="#{devOpsJenkinsBean.selecionarModulo}"
+								icon="#{dataVar.selecionado? 'ui-icon-check' : 'ui-icon-blank'}">
+								<f:attribute name="meuSelect" value="#{dataVar}" />
+							</p:commandButton>
+						</p:column>
+						<p:column headerText="Ver" width="5%" exportable="false">
+							<!-- Expandir infos -->
+							<p:rowToggler />
+						</p:column>
+						<!-- _________________________________________________________________________________________________________________________________ -->
+						<!-- Informações após expandir linha -->
+						<p:rowExpansion styleClass="rowEdit">
+
+							<p:panelGrid columns="1" columnClasses="label,value"
+								style="text-align:left;">
+								<p:outputLabel value="Chave Sonar: #{dataVar.chave}" />
+								<p:outputLabel value="URL Git: #{dataVar.urlGit}" />
+							</p:panelGrid>
+						</p:rowExpansion>
+					</p:dataTable>
+				</p:tab>
+				<!--  DevOps_________________________________________________________________________________ -->
+			</p:tabView>
+		</p:fieldset>
+
+	</h:form>
+</ui:composition>

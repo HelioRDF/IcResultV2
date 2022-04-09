@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<statusListener
+		class="ch.qos.logback.core.status.OnConsoleStatusListener" />
+	<timestamp key="bySecond" datePattern="yyyy-MM-dd"/>
+	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
+		<File>C:\logs_app_inspecao\logFile${bySecond}.log</File>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- cria um arquivo por dia -->
+			<fileNamePattern>C:\logs_app_inspecao\logFile.%d{yyyy-MM-dd}.log</fileNamePattern>
+
+			<!-- keep 30 days' worth of history capped at 3GB total size -->
+			<maxHistory>30</maxHistory>
+			<totalSizeCap>3GB</totalSizeCap>
+
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>%date %level [%thread] %logger{10} [%file:%line] %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	<logger name="org.hibernate.SQL" level="error"
+		additivity="false">
+		<apppender-ref ref="STDOUT" />
+	</logger>
+	<logger name="org.hibernate.type.description.sql" level="error"
+		additivity="false">
+		<apppender-ref ref="STDOUT" />
+	</logger>
+
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>

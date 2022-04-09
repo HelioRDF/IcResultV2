@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+
+	<h:form id="formFiltro">
+		<!-- Atualizar table -->
+
+		<br></br>
+
+		<p:fieldset legend="Carga Excel/SQL-Server" toggleable="true"
+			toggleSpeed="500" style="font-size:11px;" collapsed="false">
+			<p:outputLabel value="Carregar Controle de Siglas:"
+				style=" font-size: 12px;text-align:left;margin: 3px 10px 0px 5px; width:90%; " />
+			<p:fileUpload cancelLabel="Cancelar" uploadLabel="Carregar"
+				label="Abrir" value="#{controleSiglasBean.path}"
+				invalidFileMessage="Arquivo inválido, utilizar formato .xls"
+				fileUploadListener="#{fileUploadView.handleFileUploadControle}"
+				mode="advanced" dragDropSupport="true"
+				style="margin:5px 5px; font-size: 12px; width:95%;"
+				update="formFiltro" sizeLimit="900000" allowTypes="/(\.|\/)(xls)$/" />
+			<p:commandButton style="font-size:12px;color:#11843a;" ajax="false"
+				value="Baixar Carga Exemplo Controle de Siglas"
+				icon="ui-icon-transferthick-e-w">
+				<p:fileDownload value="#{controleSiglasBean.exemploControleSiglas}" />
+			</p:commandButton>
+			<p:messages id="msgRFC" closable="true" />
+
+		</p:fieldset>
+
+		<p:separator></p:separator>
+
+
+		<p:fieldset legend="Adicionar Módulo" toggleable="true" id="fdIdMod"
+			toggleSpeed="500" style="font-size:11px;" collapsed="true">
+
+			<h:panelGrid columns="2">
+
+				<p:outputLabel style="font-size:12px; " value="Sigla:" for="sigla" />
+				<p:inputText id="sigla" size="23" placeholder="Sigla do Sistema"
+					style="font-size:14px; width:350px;"
+					value="#{relacaoProjetoSiglaGestorBean.sigla}" />
+
+				<p:outputLabel style="font-size:12px" value="Gestor" for="gestor" />
+				<p:inputText id="gestor" size="23" placeholder="Gestor do Projeto"
+					style="font-size:14px; width:350px;"
+					value="#{relacaoProjetoSiglaGestorBean.painelGestor}" />
+
+				<p:outputLabel style="font-size:12px" value="Sistema" for="sistema" />
+				<p:inputText id="sistema" size="23" placeholder="Nome do Sistema"
+					style="font-size:14px; width:350px;"
+					value="#{relacaoProjetoSiglaGestorBean.nome_Projeto}" />
+
+				<p:outputLabel style="font-size:12px" value="Chave" for="chave" />
+				<p:inputText id="chave" size="23" placeholder="Chave do Sonar"
+					style="font-size:14px; width:350px;"
+					value="#{relacaoProjetoSiglaGestorBean.chave}" />
+
+				<p:outputLabel style="font-size:12px" value="DevOps" for="devops" />
+				<p:selectOneButton id="devops"
+					value="#{relacaoProjetoSiglaGestorBean.devOps}">
+					<f:selectItem itemLabel="Sim" itemValue="SIM" />
+					<f:selectItem itemLabel="Não" itemValue="NÃO" />
+				</p:selectOneButton>
+
+
+				<div></div>
+				<p:separator></p:separator>
+				<br></br>
+
+				<p:commandButton style="font-size:12px;color:#11843a;"
+					update="@form:fdIdMod"
+					actionListener="#{relacaoProjetoSiglaGestorBean.salvar}"
+					value="Salvar" icon="ui-icon-disk" />
+
+			</h:panelGrid>
+			<p:messages id="msgMod" closable="true" />
+
+
+		</p:fieldset>
+
+		
+	</h:form>
+</ui:composition>

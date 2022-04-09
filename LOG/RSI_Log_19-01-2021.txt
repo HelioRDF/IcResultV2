@@ -1,0 +1,135 @@
+ 
+   ***********************************************  
+   ***                                         ***  
+   ***  RSI SONAR                              ***  
+   ***  Data: 19/01/2021                                
+   ***  Hora: 11:07:24,28                                  
+   ***                                              
+   ***********************************************  
+   
+   
+INFO: Scanner configuration file: C:\Desenvolvimento\SonarQube\sonar-scanner-4.5.0.2216-windows\bin\..\conf\sonar-scanner.properties
+INFO: Project root configuration file: C:\Desenvolvimento\GIT\IcResult\sonar-project.properties
+INFO: SonarScanner 4.5.0.2216
+INFO: Java 11.0.3 AdoptOpenJDK (64-bit)
+INFO: Windows 10 10.0 amd64
+INFO: User cache: C:\Users\Generica\.sonar\cache
+INFO: Scanner configuration file: C:\Desenvolvimento\SonarQube\sonar-scanner-4.5.0.2216-windows\bin\..\conf\sonar-scanner.properties
+INFO: Project root configuration file: C:\Desenvolvimento\GIT\IcResult\sonar-project.properties
+INFO: Analyzing on SonarQube server 7.9.5
+INFO: Default locale: "pt_BR", source code encoding: "UTF-8"
+INFO: Load global settings
+INFO: Load global settings (done) | time=431ms
+INFO: Server id: BF41A1F2-AXcYowFb7rF7V3HCDRJe
+INFO: User cache: C:\Users\Generica\.sonar\cache
+INFO: Load/download plugins
+INFO: Load plugins index
+INFO: Load plugins index (done) | time=458ms
+INFO: Load/download plugins (done) | time=539ms
+INFO: Process project properties
+INFO: Execute project builders
+INFO: Execute project builders (done) | time=10ms
+INFO: Project key: ICRESULT
+INFO: Base dir: C:\Desenvolvimento\GIT\IcResult
+INFO: Working dir: C:\Desenvolvimento\GIT\IcResult\.scannerwork
+INFO: Load project settings for component key: 'ICRESULT'
+INFO: Load project settings for component key: 'ICRESULT' (done) | time=535ms
+INFO: Load quality profiles
+INFO: Load quality profiles (done) | time=485ms
+INFO: Load active rules
+INFO: Load active rules (done) | time=11271ms
+INFO: Indexing files...
+INFO: Project configuration:
+INFO:   Excluded sources: **/*enum, **/*Test.java, **/*test, **/*.properties, **/*.git, **/*.settings, **/*Documentação, **/*LOG, **/*.bat
+INFO: Load project repositories
+INFO: Load project repositories (done) | time=574ms
+INFO: 575 files indexed
+INFO: 0 files ignored because of inclusion/exclusion patterns
+INFO: 0 files ignored because of scm ignore settings
+INFO: Quality profile for css: Sonar way
+INFO: Quality profile for java: Sonar way
+INFO: Quality profile for js: Sonar way
+INFO: Quality profile for web: Sonar way
+INFO: Quality profile for xml: Sonar way
+INFO: ------------- Run sensors on module ICRESULT
+INFO: Load metrics repository
+INFO: Load metrics repository (done) | time=475ms
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by net.sf.cglib.core.ReflectUtils$1 (file:/C:/Users/Generica/.sonar/cache/866bb1adbf016ea515620f1aaa15ec53/sonar-javascript-plugin.jar) to method java.lang.ClassLoader.defineClass(java.lang.String,byte[],int,int,java.security.ProtectionDomain)
+WARNING: Please consider reporting this to the maintainers of net.sf.cglib.core.ReflectUtils$1
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+INFO: Sensor JavaSquidSensor [java]
+INFO: Configured Java source version (sonar.java.source): none
+INFO: JavaClasspath initialization
+WARN: Bytecode of dependencies was not provided for analysis of source files, you might end up with less precise results. Bytecode can be provided using sonar.java.libraries property.
+INFO: JavaClasspath initialization (done) | time=23ms
+INFO: JavaTestClasspath initialization
+INFO: JavaTestClasspath initialization (done) | time=1ms
+INFO: Java Main Files AST scan
+INFO: 141 source files to be analyzed
+INFO: 2/141 files analyzed, current file: src/main/java/br/com/icresult/bean/Analise_Dev_Jenkins_Bean.java
+INFO: 10/141 files analyzed, current file: src/main/java/br/com/icresult/bean/ControleGitDevBean.java
+INFO: 12/141 files analyzed, current file: src/main/java/br/com/icresult/bean/ControleGitHKBean.java
+INFO: 17/141 files analyzed, current file: src/main/java/br/com/icresult/bean/ControleSiglasBean.java
+INFO: 31/141 files analyzed, current file: src/main/java/br/com/icresult/bean/ModulosRTCHKBean.java
+INFO: 39/141 files analyzed, current file: src/main/java/br/com/icresult/bean/SonarAPIBean.java
+INFO: 124/141 files analyzed, current file: src/main/java/br/com/icresult/model/Captura.java
+INFO: 141/141 source files have been analyzed
+WARN: Classes not found during the analysis : [javax.faces.event.ActionEvent, javax.persistence.GenerationType, javax.persistence.TemporalType, javax.validation.Validator, jxl.common.Logger, org.apache.http.client.HttpClient, org.apache.log4j.Logger, org.hibernate.Session, org.hibernate.SessionFactory, org.json.JSONArray, org.json.JSONObject, org.primefaces.model.StreamedContent, org.slf4j.Logger]
+INFO: Java Main Files AST scan (done) | time=71484ms
+INFO: Java Test Files AST scan
+INFO: 0 source files to be analyzed
+INFO: Java Test Files AST scan (done) | time=1ms
+INFO: 0/0 source files have been analyzed
+INFO: Sensor JavaSquidSensor [java] (done) | time=72839ms
+INFO: Sensor SonarCSS Metrics [cssfamily]
+INFO: Sensor SonarCSS Metrics [cssfamily] (done) | time=78ms
+INFO: Sensor SonarCSS Rules [cssfamily]
+INFO: Sensor SonarCSS Rules [cssfamily] (done) | time=4931ms
+INFO: Sensor JaCoCo XML Report Importer [jacoco]
+INFO: Sensor JaCoCo XML Report Importer [jacoco] (done) | time=6ms
+INFO: Sensor SonarJS [javascript]
+INFO: 1 source files to be analyzed
+INFO: Sensor SonarJS [javascript] (done) | time=248ms
+INFO: 1/1 source files have been analyzed
+INFO: Sensor ESLint-based SonarJS [javascript]
+INFO: 1 source files to be analyzed
+INFO: Sensor ESLint-based SonarJS [javascript] (done) | time=6862ms
+INFO: 1/1 source files have been analyzed
+INFO: Sensor SurefireSensor [java]
+INFO: parsing [C:\Desenvolvimento\GIT\IcResult\target\surefire-reports]
+INFO: Sensor SurefireSensor [java] (done) | time=4ms
+INFO: Sensor JaCoCoSensor [java]
+INFO: Sensor JaCoCoSensor [java] (done) | time=2ms
+INFO: Sensor JavaXmlSensor [java]
+INFO: 6 source files to be analyzed
+INFO: Sensor JavaXmlSensor [java] (done) | time=459ms
+INFO: Sensor HTML [web]
+INFO: 6/6 source files have been analyzed
+INFO: Sensor HTML [web] (done) | time=8504ms
+INFO: Sensor XML Sensor [xml]
+INFO: 6 source files to be analyzed
+INFO: Sensor XML Sensor [xml] (done) | time=224ms
+INFO: 6/6 source files have been analyzed
+INFO: ------------- Run sensors on project
+INFO: Sensor Zero Coverage Sensor
+INFO: Sensor Zero Coverage Sensor (done) | time=142ms
+INFO: Sensor Java CPD Block Indexer
+INFO: Sensor Java CPD Block Indexer (done) | time=314ms
+INFO: 16 files had no CPD blocks
+INFO: Calculating CPD for 327 files
+INFO: CPD calculation finished
+INFO: Analysis report generated in 428ms, dir size=7 MB
+INFO: Analysis report compressed in 13831ms, zip size=2 MB
+INFO: Analysis report uploaded in 336ms
+INFO: ANALYSIS SUCCESSFUL, you can browse http://localhost:8084/dashboard?id=ICRESULT
+INFO: Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+INFO: More about the report processing at http://localhost:8084/api/ce/task?id=AXca-sQQgNaMZiMpdDbW
+INFO: Analysis total time: 2:12.252 s
+INFO: ------------------------------------------------------------------------
+INFO: EXECUTION SUCCESS
+INFO: ------------------------------------------------------------------------
+INFO: Total time: 2:15.785s
+INFO: Final Memory: 17M/67M
+INFO: ------------------------------------------------------------------------
