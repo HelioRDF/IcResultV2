@@ -50,7 +50,8 @@ public class SonarAPIBean {
 
 	private Logger LOG = LoggerFactory.getLogger(SonarAPIBean.class);
 	private final static String USER_AGENT = "Chrome/33.0.1750.117";
-	private final static String COMPONENT_KEYS = "api/issues/search?componentKeys=";
+	private final static String COMPONENT_KEYS_ISSUES = "api/issues/search?component=";
+	private final static String COMPONENT_KEYS_MEASURES = "api/measures/component?component=";
 	private final static String PROJETOS = "api/projects/search?ps=500&p=";
 	private final static String TOTAL = "total";
 	private final static String BRANCH_MASTER = "master";
@@ -292,7 +293,7 @@ public class SonarAPIBean {
 			throws InterruptedException {
 
 		try {
-			String url = this.getConfiguracaoSonar().getUrl() + "api/measures/component?componentKey=" + chavePainel
+			String url = this.getConfiguracaoSonar().getUrl() + COMPONENT_KEYS_MEASURES+ chavePainel
 					+ "&branch=" + branch
 					+ "&metricKeys=ncloc,critical_violations,major_violations,blocker_violations,coverage,new_coverage,sqale_index";
 			JSONObject jObj = new JSONObject(executaRequisicao(url));
@@ -367,7 +368,7 @@ public class SonarAPIBean {
 	private int getNovasIssuesMuitoAlta(String chavePainel, String branch) throws InterruptedException {
 		int novasIssuesMuitoAlta = 0;
 		try {
-			String url = this.getConfiguracaoSonar().getUrl() + COMPONENT_KEYS + chavePainel + "&branch=" + branch
+			String url = this.getConfiguracaoSonar().getUrl() + COMPONENT_KEYS_ISSUES + chavePainel + "&branch=" + branch
 					+ "&severities=BLOCKER&types=VULNERABILITY,CODE_SMELL,BUG&sinceLeakPeriod=true&resolved=false";
 			JSONObject jObj = new JSONObject(executaRequisicao(url));
 			System.out.println("URL NOVOS BLOCKERS : " + url);
@@ -392,7 +393,7 @@ public class SonarAPIBean {
 	private int getNovasIssuesAlta(String chavePainel, String branch) throws InterruptedException {
 		int novasIssuesAlta = 0;
 		try {
-			String url = this.getConfiguracaoSonar().getUrl() + COMPONENT_KEYS + chavePainel + "&branch=" + branch
+			String url = this.getConfiguracaoSonar().getUrl() + COMPONENT_KEYS_ISSUES + chavePainel + "&branch=" + branch
 					+ "&severities=CRITICAL&types=VULNERABILITY,CODE_SMELL,BUG&sinceLeakPeriod=true&resolved=false";
 			System.out.println("URL NOVOS CRITICALS : " + url);
 			JSONObject jObj = new JSONObject(executaRequisicao(url));
@@ -417,7 +418,7 @@ public class SonarAPIBean {
 	private int getNovasIssuesMedia(String chavePainel, String branch) throws InterruptedException {
 		int novasIssuesMedia = 0;
 		try {
-			String url = this.getConfiguracaoSonar().getUrl() + COMPONENT_KEYS + chavePainel + "&branch=" + branch
+			String url = this.getConfiguracaoSonar().getUrl() + COMPONENT_KEYS_ISSUES + chavePainel + "&branch=" + branch
 					+ "&severities=MAJOR&types=VULNERABILITY,CODE_SMELL,BUG&sinceLeakPeriod=true&resolved=false";
 			System.out.println("URL NOVOS MAJORS : " + url);
 			JSONObject jObj = new JSONObject(executaRequisicao(url));
